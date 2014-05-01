@@ -1,21 +1,59 @@
-#tabulate how much of the genome is each annotation
-tabulateCoverage <- function(reg1, background, reg2) {
-    require(parallel)
-    reg1 <- c(GRangesList("background"=background), reg1)
-    temp <- mclapply(1:length(reg1), function(x) sapply(reg2, function(y) {
-        sum(as.numeric(width(intersect(reg1[[x]],y))))
+#' tabulateCoverage
+#'
+#' Tabulate how much of the genome is each annotation
+#'
+#' @param regions \code{GRangesList} of query regions, for example DMRs
+#' @param background \code{GRanges} of interrogated genomic background
+#' @param annotations \code{GRangesList} of subject regions, for example ChromHMM annotations
+#' @return A \code{list} containing the elements:
+#'  \item{coverage}{Bases intersected between ranges of \code{regions} and \code{annotations}}
+#'  \item{ratios}{Percentage of genome covered by each intersection}
+#'  \item{observed/expected}{Enrichment ratio of \code{regions} regions taking into account the \code{background}}
+#'
+#' @export
+#'
+#' @importFrom GenomicRanges GRangesList width intersect
+#' @importFrom parallel mclapply
+#'
+#' @author Aaron Statham <a.statham@@garvan.org.au>
+tabulateCoverage <- function(regions, background, annotations) {
+    regions <- c(GRangesList("background"=background), regions)
+    temp <- mclapply(1:length(regions), function(x) sapply(annotations, function(y) {
+        sum(as.numeric(width(intersect(regions[[x]],y))))
     }))
-    names(temp) <- names(reg1)
+    names(temp) <- names(regions)
     temp <- do.call(cbind, temp)
-    temp <- cbind(temp, "genome"=sapply(reg2, function(x) sum(as.numeric(width(x)))))
-    temp <- rbind(temp, "total"=c(sapply(reg1, function(x) sum(as.numeric(width(x)))), NA))
+    temp <- cbind(temp, "genome"=sapply(annotations, function(x) sum(as.numeric(width(x)))))
+    temp <- rbind(temp, "total"=c(sapply(regions, function(x) sum(as.numeric(width(x)))), NA))
     tempRat <- t(t(temp)/temp[nrow(temp),])*100
     tempRat2 <- tempRat[,-1]/tempRat[,"background"]
     list("coverage"=temp, "ratios"=tempRat, "observed/expected"=tempRat2[-nrow(tempRat2),-ncol(tempRat2), drop=FALSE])
 }
 
-#create a barplot of enrichment/depletion of regions vs annotations, assess significance
-#by permuting regions
+#' coverageBarplot
+#'
+#' Create a barplot of enrichment/depletion of regions vs annotations, assess significance by permuting regions
+#'
+#' @param regions \code{GRangesList} of query regions, for example DMRs
+#' @param background \code{GRanges} of interrogated genomic background
+#' @param annotations \code{GRangesList} of subject regions, for example ChromHMM annotations
+#' @param main Title of the plot
+#' @param nperm Number of permutations to perform
+#' @param cols Colours to use for the barplot
+#' @param colBy Whether to colour by region or annotation
+#' @param verbose Whether to print progress
+#' @return Creates a barplot of observed/expected ratios of regions vs annotations with an asterisk to mark those which are significant, and returns a \code{list} of the plotted data containing the elements:
+#'  \item{covTable}{Overlap of \code{regions} vs \code{annotations} as calculated by \code{tabulateCoverage}}
+#'  \item{permTable}{Overlaps of \code{perms} vs \code{annotations}}
+#'  \item{permQuant}{2.5\% and 97.5\% quantiles of observed/expected values obtained from permuted regions}
+#'  \item{perms}{Permuted regions used to calculate p-values}
+#'  \item{permPval}{P-values for enrichment and depletion}
+#'
+#' @export
+#'
+#' @importFrom GenomicRanges GRanges 
+#'
+#' @author Aaron Statham <a.statham@@garvan.org.au>
 coverageBarplot <- function(regions, background, annotations, main, nperm=1000, cols=NULL, colBy=c("regions", "annotations"), verbose=FALSE) {
     colBy <- match.arg(colBy)
     if (colBy=="regions") 

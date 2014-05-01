@@ -1,4 +1,43 @@
-annotateRegions <- function(reg) {
+#' annotateRegions
+#'
+#' Annotate regions with respect to gene and CpG island annotations
+#'
+#' @param reg The \code{GRanges} to be annotated
+#' @param gx \code{GRanges} of gene expression
+#' @param tx \code{GRanges} of transcript expression
+#' @param CpGislands \code{GRanges} of CpG island positions
+#' @return \code{reg} with additional per region metadata:
+#'  \item{nGeneTSS}{Number of TSSs overlapping}
+#'  \item{nProtGeneTSS}{Number of TSSs overlapping (protein coding only)}
+#'  \item{distanceTSS}{Distance to closest TSS}
+#'  \item{TSS}{Index of the closest TSS in \code{tx}}
+#'  \item{tx_name}{Gencode tx_name}
+#'  \item{tx_type}{Gencode tx_type}
+#'  \item{gene_id}{Gencode gene_id}
+#'  \item{gene_name}{Gencode gene_name}
+#'  \item{result}{Expression result from \code{gx}}
+#'  \item{distanceTSS_prot}{Distance to closest TSS (protein coding only)}
+#'  \item{TSS_prot}{Index of the closest TSS in tx (protein coding only)}
+#'  \item{tx_name_prot}{Gencode tx_name (protein coding only)}
+#'  \item{tx_type_prot}{Gencode tx_type (protein coding only)}
+#'  \item{gene_id_prot}{Gencode gene_id (protein coding only)}
+#'  \item{gene_name_prot}{ (Gencode gene_name protein coding only)}
+#'  \item{result}{Expression result from \code{gx} (protein coding only)}
+#'  \item{distanceCpGi}{Distance to the closest CpG island}
+#'  \item{CpGi}{Index of the closest CpG island in \code{CpGislands}}
+#'  \item{promoter}{Proportion overlapping a \code{tx} promoter (+/- 2kb from TSS)}
+#'  \item{genebody}{Proportion overlapping a \code{tx} genebody}
+#'  \item{intergenic}{Proportion not overlapping \code{promoter} or \code{genebody}}
+#'  \item{CpGisland}{Proportion overlapping CpG islands}
+#'  \item{CpGshores}{Proportion overlapping CpG shores (+/- 2kb flanking CpG islands)}
+#'  \item{nonCpG}{Proportion not overlaping \code{CpGisland} or \code{CpGshores}}
+#'
+#' @export
+#' 
+#' @importFrom GenomicRanges findOverlaps distanceToNearest resize setdiff
+#'
+#' @author Aaron Statham <a.statham@@garvan.org.au>
+annotateRegions <- function(reg, gx, tx, CpGislands) {
 
     # Want to do most analysis for "just" protein coding as well as all genes
     tx2 <- tx[tx$tx_type=="protein_coding"]
@@ -51,6 +90,7 @@ annotateRegions <- function(reg) {
     
     # % CpG island/CpG shore/nonCpG
     reg$CpGisland <- coverageRatio(reg, CpGislands)
+    CpGshores <- reduce(c(flank(CpGislands, width=2000, start=TRUE), flank(CpGislands, width=2000, start=FALSE)))
     reg$CpGshores <- coverageRatio(reg, CpGshores)
     reg$nonCpG <- coverageRatio(reg, setdiff(setdiff(genomeGR, CpGislands), CpGshores))
 

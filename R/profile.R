@@ -1,12 +1,31 @@
+#' q
+#'
+#' Shortcut to quot
+#'
+#' @param save Whether to save the workspace
+#' @param ... Passed on to \code{quit}
+#'
+#' @export
 q <- function (save="no", ...) {
   quit(save=save, ...)
 }
 
-.ls.objects <- function (pos = 1, pattern, order.by,
-                        decreasing=FALSE, head=FALSE, n=5) {
+#' lsos
+#'
+#' Lists loaded R objects, their dimensions and memory usage
+#'
+#' @param order.by Which object parameter to sort by
+#' @param decreasing Sort order
+#' @param head Subset list of objects?
+#' @param n Number of objects to print if \code{head} is \code{TRUE}
+#'
+#' @export
+#'
+#' @author stolen from somewhere on stackoverflow
+lsos <- function (order.by="Size", decreasing=TRUE, head=TRUE, n=10) {
     napply <- function(names, fn) sapply(names, function(x)
-                                         fn(get(x, pos = pos)))
-    names <- base::ls(pos = pos, pattern = pattern)
+                                         fn(get(x, pos=1)))
+    names <- base::ls(pos=1)
     obj.class <- napply(names, function(x) as.character(class(x))[1])
     obj.mode <- napply(names, mode)
     obj.type <- ifelse(is.na(obj.class), obj.mode, obj.class)
@@ -25,9 +44,5 @@ q <- function (save="no", ...) {
     if (head)
         out <- head(out, n)
     out
-}
-
-lsos <- function(..., n=10) {
-    .ls.objects(..., order.by="Size", decreasing=TRUE, head=TRUE, n=n)
 }
 
