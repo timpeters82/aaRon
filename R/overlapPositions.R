@@ -18,7 +18,7 @@ overlapPositions <- function(query, subject) {
     start(subject)[mm[,2]]-start(query)[mm[,1]]
 }
 
-#' boundaryOverlaps
+#' overlapBoundaries
 #'
 #' Returns 
 #'
@@ -34,7 +34,7 @@ overlapPositions <- function(query, subject) {
 #' @importFrom IRanges as.matrix
 #'
 #' @author Aaron Statham <a.statham@@garvan.org.au>
-boundaryOverlaps <- function(query, subject, boundary=c("both", "start", "end"), distance=10000) {
+overlapBoundaries <- function(query, subject, distance=10000, boundary=c("both", "start", "end")) {
     stopifnot(all(width(subject)==1))
     boundary <- match.arg(boundary)
     query.boundary <- GRanges()

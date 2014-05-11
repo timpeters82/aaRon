@@ -26,6 +26,8 @@ strip <- function(x, genome, chrs=1:24) {
 #' @param x A \code{GRanges} objext
 #' @return \code{x} with no element metadata
 #'
+#' @export
+#'
 #' @importFrom GenomicRanges values
 #'
 #' @author Aaron Statham <a.statham@@garvan.org.au>
@@ -40,6 +42,8 @@ unvalue <- function(x) {
 #'
 #' @param x A \code{GRanges} objext
 #' @return \code{x} with strand set to '*'
+#'
+#' @export
 #'
 #' @importFrom GenomicRanges strand
 #'
