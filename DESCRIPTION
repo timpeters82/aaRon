@@ -1,14 +1,15 @@
 Package: aaRon
 Title: aaRon's functions
 Description: Various functions for NGS/WGBS analysis
-Version: 0.5
+Version: 0.6
 Authors@R: c(person(given=c("Aaron", "L."), family="Statham", role=c("aut",
     "cre"), email="a.statham@garvan.org.au"))
 Depends:
     R (>= 3.0.2),
     GenomicRanges,
     IRanges,
-    rtracklayer
+    rtracklayer,
+    Repitools
 License: LGPL (>= 2)
 LazyData: true
 Roxygen: list(wrap = TRUE)
