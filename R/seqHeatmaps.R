@@ -18,6 +18,7 @@
 #' @export
 #' 
 #' @importFrom Repitools featureScores tables
+#' @importFrom GenomicRanges unlist
 #' @importFrom IRanges elementLengths
 #'
 #' @author Aaron Statham <a.statham@@garvan.org.au>
