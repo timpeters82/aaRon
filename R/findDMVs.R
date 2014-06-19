@@ -29,7 +29,7 @@ findDMVs <- function(x, samples, minSize=5000, wsize=1000, step=100, cutoff=0.15
     # split through chromosomes and mclapply
     bins <- split(bins, seqnames(bins))
     x.rat <- split(x.rat, seqnames(x.rat))
-    w <- split(x$w, seqnames(x))
+    w <- split(x$w, as.character(seqnames(x)))
     wm <- unlist(GRangesList(mclapply(names(bins), function(i) {
         message("Processing ", i)
         tmp <- bins[[i]]
@@ -43,6 +43,6 @@ findDMVs <- function(x, samples, minSize=5000, wsize=1000, step=100, cutoff=0.15
         tmp <- reduce(bins[which(values(wm)[[i]]<cutoff)])
         tmp[width(tmp)>=minSize]
     }))
-    names(DMVs) <- samples$sample
+    names(DMVs) <- samples$Sample
     DMVs
 }
