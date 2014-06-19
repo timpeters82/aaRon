@@ -1,7 +1,7 @@
 Package: aaRon
 Title: aaRon's functions
 Description: Various functions for NGS/WGBS analysis
-Version: 0.6.1
+Version: 0.6.2
 Authors@R: c(person(given=c("Aaron", "L."), family="Statham", role=c("aut",
     "cre"), email="a.statham@garvan.org.au"))
 Depends:
@@ -9,7 +9,8 @@ Depends:
     GenomicRanges,
     IRanges,
     rtracklayer,
-    Repitools
+    Repitools,
+    matrixStats
 License: LGPL (>= 2)
 LazyData: true
 Roxygen: list(wrap = TRUE)
