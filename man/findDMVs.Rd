@@ -32,8 +32,8 @@ findDMVs(x, samples, minSize = 5000, wsize = 1000, step = 100,
 \code{GRangesList} of DMVs found in each sample
 
 importFrom GenomicRanges values seqlengths seqnames
-GRangesList reduce width importFrom Repitools genomeBlocks
-importFrom parallel multicore
+GRangesList reduce width split importFrom Repitools
+genomeBlocks importFrom parallel multicore
 }
 \description{
 Finds DNA methylation valleys using the procedure described
