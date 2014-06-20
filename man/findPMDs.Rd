@@ -3,7 +3,7 @@
 \alias{findPMDs}
 \title{findPMDs}
 \usage{
-findPMDs(x, samples, minCov)
+findPMDs(x, samples, minCov = 5)
 }
 \arguments{
   \item{x}{\code{GRanges} of methylation count data}

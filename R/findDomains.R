@@ -59,7 +59,7 @@ findDomains <- function(x, samples, minSize=5000, wsize=1000, step=100, cutoff=0
 #' @export
 #'
 #' @author Aaron Statham <a.statham@@garvan.org.au>
-findDMVs <- function(x, samples, minCov) findDomains(x, samples, minSize=5000, wsize=1000, step=100, cutoff=0.15, minCov=minCov)
+findDMVs <- function(x, samples, minCov=5) findDomains(x, samples, minSize=5000, wsize=1000, step=100, cutoff=0.15, minCov=minCov)
 
 #' findPMDs
 #' 
@@ -73,4 +73,4 @@ findDMVs <- function(x, samples, minCov) findDomains(x, samples, minSize=5000, w
 #' @export
 #'
 #' @author Aaron Statham <a.statham@@garvan.org.au>
-findPMDs <- function(x, samples, minCov) findDomains(x, samples, minSize=100000, wsize=10000, step=100, cutoff=0.6, minCov=minCov)
+findPMDs <- function(x, samples, minCov=5) findDomains(x, samples, minSize=100000, wsize=10000, step=100, cutoff=0.6, minCov=minCov)

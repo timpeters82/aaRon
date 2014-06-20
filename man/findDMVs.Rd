@@ -3,7 +3,7 @@
 \alias{findDMVs}
 \title{findDMVs}
 \usage{
-findDMVs(x, samples, minCov)
+findDMVs(x, samples, minCov = 5)
 }
 \arguments{
   \item{x}{\code{GRanges} of methylation count data}
