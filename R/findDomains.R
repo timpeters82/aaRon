@@ -11,7 +11,7 @@
 #' @param minCov Minumum sequencing coverage for a CpG site to contribute to the weighted mean calculation
 #' @return \code{GRangesList} of domains found in each sample
 #' 
-#' importFrom GenomicRanges values seqlengths seqnames GRangesList reduce width split
+#' importFrom GenomicRanges values values<- seqlengths seqnames GRangesList reduce width split
 #' importFrom Repitools genomeBlocks
 #' importFrom parallel multicore
 #' 

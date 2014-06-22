@@ -7,8 +7,8 @@
 #'
 #' @export
 #'
-#' @importFrom GenomicRanges width findOverlaps start
-#' @importFrom IRanges as.matrix
+#' @importFrom GenomicRanges width width<- findOverlaps start
+#' @importFrom IRanges as.matrix IRanges
 #'
 #' @author Aaron Statham <a.statham@@garvan.org.au>
 shuffle <- function(x) {
@@ -38,7 +38,7 @@ projectOnto <- function(pos, avail) {
 #'
 #' @export
 #'
-#' @importFrom GenomicRanges seqlengths seqnames seqlevels start end width
+#' @importFrom GenomicRanges seqlengths seqlengths<- seqnames seqlevels seqlevels<- start end width
 #' @importFrom rtracklayer import.bed
 #'
 #' @author Aaron Statham <a.statham@@garvan.org.au>

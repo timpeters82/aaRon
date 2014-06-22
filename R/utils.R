@@ -9,7 +9,7 @@
 #'
 #' @export
 #'
-#' @importFrom GenomicRanges seqnames seqlevels reduce
+#' @importFrom GenomicRanges seqnames seqlevels<- reduce
 #' @importFrom IRanges endoapply
 #'
 #' @author Aaron Statham <a.statham@@garvan.org.au>
@@ -28,7 +28,7 @@ strip <- function(x, genome, chrs=1:24) {
 #'
 #' @export
 #'
-#' @importFrom GenomicRanges values
+#' @importFrom GenomicRanges values<-
 #'
 #' @author Aaron Statham <a.statham@@garvan.org.au>
 unvalue <- function(x) {
@@ -45,7 +45,7 @@ unvalue <- function(x) {
 #'
 #' @export
 #'
-#' @importFrom GenomicRanges strand
+#' @importFrom GenomicRanges strand<-
 #'
 #' @author Aaron Statham <a.statham@@garvan.org.au>
 unstrand <- function(x) {

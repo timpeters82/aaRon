@@ -34,7 +34,8 @@
 #'
 #' @export
 #' 
-#' @importFrom GenomicRanges findOverlaps distanceToNearest resize setdiff
+#' @importFrom GenomicRanges findOverlaps distanceToNearest resize setdiff flank
+#' @importFrom IRanges IRanges
 #'
 #' @author Aaron Statham <a.statham@@garvan.org.au>
 annotateRegions <- function(reg, gx, tx, CpGislands) {

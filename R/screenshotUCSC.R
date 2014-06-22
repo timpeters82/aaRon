@@ -75,6 +75,8 @@ plotManyUCSC <- function(x, outFile, mc.cores=1, hub, session=NULL) {
 #' @param hub URL of UCSC track hub to load
 #' @param session URL of the UCSC session to load (optional)
 #'
+#' @importFrom GenomicRanges start start<- end end<-
+#'
 #' @export
 #'
 #' @author Aaron Statham <a.statham@@garvan.org.au>

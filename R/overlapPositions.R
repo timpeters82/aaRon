@@ -30,7 +30,7 @@ overlapPositions <- function(query, subject) {
 #'
 #' @export
 #'
-#' @importFrom GenomicRanges width strand
+#' @importFrom GenomicRanges width strand strand<-
 #' @importFrom IRanges as.matrix
 #'
 #' @author Aaron Statham <a.statham@@garvan.org.au>

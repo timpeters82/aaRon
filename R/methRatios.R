@@ -9,7 +9,7 @@
 #'
 #' @export
 #'
-#' @importFrom GenomicRanges values
+#' @importFrom GenomicRanges values values<-
 #'
 #' @author Aaron Statham <a.statham@@garvan.org.au>
 methRatios <- function(x, samples, minCov=5) {

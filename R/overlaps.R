@@ -10,7 +10,7 @@
 #' @export
 #' 
 #' @importFrom GenomicRanges findOverlaps
-#' @importFrom IRanges viewMeans Views ranges Rle
+#' @importFrom IRanges viewMeans Views ranges Rle as.matrix
 #'
 #' @author Aaron Statham <a.statham@@garvan.org.au>
 overlapMeans <- function(x, y, z) {
