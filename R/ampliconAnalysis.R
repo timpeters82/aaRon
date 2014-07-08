@@ -63,7 +63,7 @@ ampliconGRanges <- function(x, genome, mc.cores=1) {
 #' @export
 #'
 #' @importFrom GenomicRanges GRangesList GRanges seqnames start end strand values seqlevels seqlevels countOverlaps resize subsetByOverlaps
-#' @importFrom IRanges IRanges endoapply elementLengths DataFrame %over% cbind
+#' @importFrom IRanges IRanges endoapply elementLengths DataFrame %over% cbind as.data.frame
 #' @importFrom Biostrings getSeq complement letterFrequency
 #' @importFrom parallel mclapply
 #' @importFrom GenomicAlignments readGAlignments pileLettersAt cigar
@@ -150,7 +150,7 @@ ampliconAnalysis <- function(amplicon_file, bams, genome, run_setup_file, minCov
     # Add to summary
     conversion_summary <- sapply(amps, function(i) {
         tmp <- subsetByOverlaps(result, amplicons[i])
-        tmp <- as.data.frame(tmp[tmp$base!="CG"])
+        tmp <- IRanges::as.data.frame(tmp[tmp$base!="CG"])
         tmp.C <- as.matrix(tmp[,grep("^C\\.", names(tmp))])
         tmp.cov <- as.matrix(tmp[,grep("^cov\\.", names(tmp))])
         # Remove low coverage data
@@ -162,7 +162,7 @@ ampliconAnalysis <- function(amplicon_file, bams, genome, run_setup_file, minCov
     
     methylation_summary <- sapply(amps, function(i) {
         tmp <- subsetByOverlaps(result, amplicons[i])
-        tmp <- as.data.frame(tmp[tmp$base=="CG"])
+        tmp <- IRanges::as.data.frame(tmp[tmp$base=="CG"])
         tmp.C <- as.matrix(tmp[,grep("^C\\.", names(tmp))])
         tmp.cov <- as.matrix(tmp[,grep("^cov\\.", names(tmp))])
         # Remove low coverage data
