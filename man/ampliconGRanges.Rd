@@ -3,7 +3,7 @@
 \alias{ampliconGRanges}
 \title{ampliconGRanges}
 \usage{
-ampliconGRanges(x, genome, mc.cores = 8)
+ampliconGRanges(x, genome, mc.cores = 1)
 }
 \arguments{
   \item{x}{\code{data.frame} of amplicons containing the
@@ -17,7 +17,9 @@ ampliconGRanges(x, genome, mc.cores = 8)
 \code{GRanges} of amplicon locations with metadata
 }
 \description{
-ampliconGRanges
+Align a \code{data.frame} describing amplicons against a
+supplied genome, returning an annotated amplicon
+\code{GRanges}
 }
 \author{
 Aaron Statham <a.statham@garvan.org.au>
