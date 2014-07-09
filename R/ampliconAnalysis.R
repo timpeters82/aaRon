@@ -150,7 +150,7 @@ ampliconAnalysis <- function(amplicon_file, bams, genome, run_setup_file, minCov
     # Add to summary
     conversion_summary <- sapply(amps, function(i) {
         tmp <- subsetByOverlaps(result, amplicons[i])
-        tmp <- IRanges::as.data.frame(tmp[tmp$base!="CG"])
+        tmp <- as.data.frame(tmp[tmp$base!="CG"])
         tmp.C <- as.matrix(tmp[,grep("^C\\.", names(tmp))])
         tmp.cov <- as.matrix(tmp[,grep("^cov\\.", names(tmp))])
         # Remove low coverage data
@@ -162,7 +162,7 @@ ampliconAnalysis <- function(amplicon_file, bams, genome, run_setup_file, minCov
     
     methylation_summary <- sapply(amps, function(i) {
         tmp <- subsetByOverlaps(result, amplicons[i])
-        tmp <- IRanges::as.data.frame(tmp[tmp$base=="CG"])
+        tmp <- as.data.frame(tmp[tmp$base=="CG"])
         tmp.C <- as.matrix(tmp[,grep("^C\\.", names(tmp))])
         tmp.cov <- as.matrix(tmp[,grep("^cov\\.", names(tmp))])
         # Remove low coverage data
@@ -175,4 +175,62 @@ ampliconAnalysis <- function(amplicon_file, bams, genome, run_setup_file, minCov
 
     # Return all results
     list(summary=amplicon_summary, CpGs=result.CpGs, Cs=result, all_bases=nucl_piles, amplicons=amplicons)
+}
+
+#' regionalAmpliconAnalysis
+#'
+#' Condenses the analysis of individual amplicons to those grouped in regions
+#'
+#' @param x Result returned by \link{ampliconAnalysis}
+#' @param grouping \code{character} vector of region names by which amplicons are grouped together
+#' @param minCov Minumum sequencing coverage required to report methylation/conversion estimates
+#' @return List
+#'
+#' @export
+#'
+#' @importFrom GenomicRanges GRangesList seqnames countOverlaps split findOverlaps values
+#' @importFrom IRanges subjectHits
+#' @importMethodsFrom GenomicRanges range
+#'
+#' @author Aaron Statham <a.statham@@garvan.org.au>
+regionalAmpliconAnalysis <- function(x, grouping, minCov=50) {
+    stopifnot(length(grouping)==length(x$amplicons))
+
+    # Create GRanges of boundaries of regions
+    regions <- unlist(GRangesList(lapply(split(x$amplicons, grouping), function(x) {
+        stopifnot(length(unique(seqnames(x)))==1)
+        range(x, ignore.strand=TRUE)
+    })))
+    stopifnot(all(countOverlaps(regions)==1))
+
+    # Annotate the regions with which amplicons they comprise of
+    x.ov <- as.matrix(findOverlaps(regions, x$amplicons))
+    stopifnot(!any(duplicated(x.ov[,2])))
+    x.names <- tapply(x$amplicons$Amplicon[x.ov[,2]], x.ov[,1], paste, collapse="+")
+    regions$Amplicons[as.integer(names(x.names))] <- unname(x.names)
+
+
+    # Reannotate Cs & CpGs as regions not amplicons
+    stopifnot(names(values(x$Cs))[[1]]=="amplicons", names(values(x$CpGs))[[1]]=="amplicons")
+    regions.Cs <- x$Cs
+    names(values(regions.Cs))[1] <- "region"
+    regions.Cs$region <- names(regions)[subjectHits(findOverlaps(regions.Cs, regions))]
+    regions.CpGs <- x$CpGs
+    names(values(regions.CpGs))[1] <- "region"
+    regions.CpGs$region <- names(regions)[subjectHits(findOverlaps(regions.CpGs, regions))]
+
+    # Summarise per region
+    regions_summary <- lapply(split(regions.Cs, regions.Cs$region), function(y) {
+        y <- as.data.frame(values(y))
+        # Remove methylation data below minCov
+        toNA <- y[,grep("^cov\\.", names(y))] < minCov
+        y[,grep("^C\\.", names(y))][toNA] <- NA
+        CG <- y$base=="CG"
+        res <- cbind("coverage"=colMeans(y[,grep("^cov\\.", names(y))], na.rm=TRUE),
+                  "methylation"=colMeans(y[CG,grep("^C\\.", names(y))], na.rm=TRUE),
+                   "conversion"=1-colMeans(y[!CG,grep("^C\\.", names(y))], na.rm=TRUE))
+        rownames(res) <- gsub("^cov.", "", rownames(res))
+        res
+    })
+    c(x, list("regions"=regions, "regions_summary"=regions_summary, "regions_Cs"=regions.Cs, "regions_CpGs"=regions.CpGs))
 }
