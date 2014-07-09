@@ -56,7 +56,7 @@ ampliconGRanges <- function(x, genome, mc.cores=1) {
 #' @param bams A named \code{character} vector of bams to be analysed for the supplied amplicons, names of which correspond to the \code{Library} column of the supplied \code{run_setup_file}
 #' @param run_setup_file Filename of the \code{csv} to read in which amplicons from which samples are in which libraries
 #' @param minCov Minumum sequencing coverage required to report methylation/conversion estimates
-#' @param min.map.q Minumum mapping quality for reads to be included in the analysis
+#' @param min.map.q Minumum mapping quality for reads to be included in the analysis, set to 0 for no filtering
 #' @param mc.cores Number of cores to use during processing
 #' @return List
 #'
@@ -106,7 +106,7 @@ ampliconAnalysis <- function(amplicon_file, bams, genome, run_setup_file, minCov
     # Read in libraries (Paired only?)
     message("Reading in aligned sequencing libraries")
     libs <- mclapply(bams, readGAlignments, param=ScanBamParam(flag=scanBamFlag(isPaired=TRUE, isProperPair=TRUE), what=c("seq", "mapq")), mc.cores=mc.cores)
-    libs <- endoapply(libs, function(x) x[values(x)$mapq>=min.map.q])
+    if (min.map.q>0) libs <- endoapply(libs, function(x) x[values(x)$mapq>=min.map.q])
     seqlevels(amplicons, force=TRUE) <- seqlevels(amplicon.bases, force=TRUE) <- seqlevels(libs[[1]]) # for pileup
     
     # Summary of how many reads hit amplicons

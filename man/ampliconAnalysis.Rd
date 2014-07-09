@@ -25,7 +25,7 @@ ampliconAnalysis(amplicon_file, bams, genome, run_setup_file, minCov = 50,
   report methylation/conversion estimates}
 
   \item{min.map.q}{Minumum mapping quality for reads to be
-  included in the analysis}
+  included in the analysis, set to 0 for no filtering}
 
   \item{mc.cores}{Number of cores to use during processing}
 }
