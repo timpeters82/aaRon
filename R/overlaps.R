@@ -91,6 +91,14 @@ overlapRatios <- function(x, y, C, cov, minCov=5) {
 #'
 #' @author Aaron Statham <a.statham@@garvan.org.au>
 coverageRatio <- function(query, subject, ratio=TRUE) {
+    if (length(unique(strand(subject)))>1) {
+        warning("Supplied 'subject' contains strand information - this is ignored by coverageRatio")
+        strand(subject) <- "*"
+    }
+    if (nrow(as.matrix(findOverlaps(subject, ignoreSelf=TRUE, ignoreRedundant=TRUE)))>0) {
+        warning("Supplied 'subject' contains overlapping ranges, reducing...")
+        subject <- reduce(subject)
+    }
     # Fucking Views use Fucking RangesLists which do not fucking preserve order
     oo <- order(query)
     chr.oo <- unique(as.character(seqnames(query[oo])))
