@@ -1,7 +1,7 @@
 Package: aaRon
 Title: aaRon's functions
 Description: Various functions for NGS/WGBS analysis
-Version: 0.6.9
+Version: 0.7.0
 Authors@R: c(person(given=c("Aaron", "L."), family="Statham", role=c("aut",
     "cre"), email="a.statham@garvan.org.au"))
 Depends:
@@ -16,6 +16,7 @@ Imports:
     limma,
     matrixStats,
     Repitools,
+    ggplot2,
     zoo
 License: LGPL (>= 2)
 LazyData: true
