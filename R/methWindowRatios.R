@@ -15,7 +15,11 @@
 #'
 #' @author Aaron Statham <a.statham@@garvan.org.au>
 methWindowRatios <- function(x, windows, samples, minCov=5, mc.cores=1) {
-	values(windows) <- simplify2array(mclapply(1:nrow(samples), function(i) overlapRatios(x, windows, samples$C[i], samples$cov[i]), mc.cores=mc.cores))
-	names(values(windows)) <- samples$Sample
-	windows
+    tmp <- simplify2array(mclapply(1:nrow(samples),
+        function(i) overlapRatios(x, windows, samples$C[i], samples$cov[i]),
+        mc.cores = mc.cores))
+    if (length(windows)==1) tmp <- matrix(tmp, nrow=1)
+    values(windows) <- tmp
+    names(values(windows)) <- samples$Sample
+    windows
 }
