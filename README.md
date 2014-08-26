@@ -13,5 +13,8 @@ devtools::install_github("astatham/aaRon")
 
 # TODOs
 
-* Document each function (thank you roxygen2!) and add working examples
+* Create S4 classes for methylation count and ratio tables
+* Add working examples to each function
+* Create a vignette of example use cases
+
 
