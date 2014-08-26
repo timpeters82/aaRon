@@ -37,7 +37,7 @@ findNDRs <- function(x, samples, p.cutoff=15, windowWidth=100, windowBy=20, minS
 	windows <- windows[windows %over% x]
 
 	# Find NDRs
-	GRangesList(lapply(1:nrow(samples), function(i) {
+	NDRs <- GRangesList(lapply(1:nrow(samples), function(i) {
 		message(paste0("Processing ", samples$Sample[i]))
 		# Counts of Cs and Ts in each window
 		message(" - Counting Cs")
@@ -61,4 +61,9 @@ findNDRs <- function(x, samples, p.cutoff=15, windowWidth=100, windowBy=20, minS
         windows.cutoff$p.mean <- overlapMeans(windows, windows.cutoff, windows.pvals)
         windows.cutoff <- windows.cutoff[width(windows.cutoff)>=minSize]
 	}))
+
+	names(NDRs) <- samples$Sample
+	seqlevels(NDRs) <- seqlevels(x)
+	seqlengths(NDRs) <- seqlengths(x)
+	NDRs
 }
