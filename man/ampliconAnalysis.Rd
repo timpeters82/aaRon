@@ -3,8 +3,8 @@
 \alias{ampliconAnalysis}
 \title{ampliconAnalysis}
 \usage{
-ampliconAnalysis(amplicon_file, bams, genome, run_setup_file, minCov = 50,
-  min.map.q = 40, mc.cores = 1)
+ampliconAnalysis(amplicon_file, bams, genome, minCov = 50, min.map.q = 40,
+  mc.cores = 1)
 }
 \arguments{
   \item{amplicon_file}{Filename of the \code{csv} to read
@@ -13,13 +13,7 @@ ampliconAnalysis(amplicon_file, bams, genome, run_setup_file, minCov = 50,
   \item{genome}{\code{BSgenome} to map the amplicons to}
 
   \item{bams}{A named \code{character} vector of bams to be
-  analysed for the supplied amplicons, names of which
-  correspond to the \code{Library} column of the supplied
-  \code{run_setup_file}}
-
-  \item{run_setup_file}{Filename of the \code{csv} to read
-  in which amplicons from which samples are in which
-  libraries}
+  analysed for the supplied amplicons}
 
   \item{minCov}{Minumum sequencing coverage required to
   report methylation/conversion estimates}

@@ -19,7 +19,10 @@
 #'
 #' @author Aaron Statham <a.statham@@garvan.org.au>
 findDomains <- function(x, samples, minSize=5000, wsize=1000, step=100, cutoff=0.15, minCov=5) {
-	stopifnot("w" %in% names(values(x)))
+    if (!"w" %in% names(values(x))) {
+        message("Weights missing from 'x', calculating...")
+        x$w <- cpgWeights(x)
+    }
 	stopifnot(all(!is.na(seqlengths(x))))
 
 	bins <- genomeBlocks(seqlengths(x), width=wsize, spacing=step)

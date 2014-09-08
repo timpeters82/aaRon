@@ -53,8 +53,7 @@ ampliconGRanges <- function(x, genome, mc.cores=1) {
 #'
 #' @param amplicon_file Filename of the \code{csv} to read in amplicon data from
 #' @param genome \code{BSgenome} to map the amplicons to
-#' @param bams A named \code{character} vector of bams to be analysed for the supplied amplicons, names of which correspond to the \code{Library} column of the supplied \code{run_setup_file}
-#' @param run_setup_file Filename of the \code{csv} to read in which amplicons from which samples are in which libraries
+#' @param bams A named \code{character} vector of bams to be analysed for the supplied amplicons
 #' @param minCov Minumum sequencing coverage required to report methylation/conversion estimates
 #' @param min.map.q Minumum mapping quality for reads to be included in the analysis, set to 0 for no filtering
 #' @param mc.cores Number of cores to use during processing
@@ -70,19 +69,15 @@ ampliconGRanges <- function(x, genome, mc.cores=1) {
 #' @importFrom Rsamtools ScanBamParam scanBamFlag
 #'
 #' @author Aaron Statham <a.statham@@garvan.org.au>
-ampliconAnalysis <- function(amplicon_file, bams, genome, run_setup_file, minCov=50, min.map.q=40, mc.cores=1) {
+ampliconAnalysis <- function(amplicon_file, bams, genome, minCov=50, min.map.q=40, mc.cores=1) {
     # Quick checks
     stopifnot(file.exists(amplicon_file))
     stopifnot(all(file.exists(bams)))
     stopifnot(length(names(bams))==length(bams))
     
-    # Read in, validate and align amplicon and run_setup files
+    # Read in, validate and align amplicon file
     amplicons <- read.csv(amplicon_file, stringsAsFactors=FALSE)
     stopifnot(all(c("Amplicon", "Target", "FW", "RV", "Sequenom") %in% names(amplicons)))
-    run_setup <- read.csv(run_setup_file, stringsAsFactors=FALSE)
-    stopifnot(all(c("Library", "Sample", "Amplicon") %in% names(run_setup)))
-    stopifnot(all(run_setup$Library %in% names(bams)))
-    stopifnot(all(run_setup$Amplicon %in% amplicons$Amplicon))
     message("Mapping amplicons to the supplied genome")
     amplicons <- ampliconGRanges(amplicons, genome, mc.cores)
 
