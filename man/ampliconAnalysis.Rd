@@ -3,17 +3,20 @@
 \alias{ampliconAnalysis}
 \title{ampliconAnalysis}
 \usage{
-ampliconAnalysis(amplicon_file, bams, genome, minCov = 50, min.map.q = 40,
-  mc.cores = 1)
+ampliconAnalysis(amplicon_file, bams, genome, paired = TRUE, minCov = 50,
+  min.map.q = 40, mc.cores = 1)
 }
 \arguments{
   \item{amplicon_file}{Filename of the \code{csv} to read
   in amplicon data from}
 
-  \item{genome}{\code{BSgenome} to map the amplicons to}
-
   \item{bams}{A named \code{character} vector of bams to be
   analysed for the supplied amplicons}
+
+  \item{genome}{\code{BSgenome} to map the amplicons to}
+
+  \item{paired}{\code{boolean} of whether to only load
+  properly paired reads from the bams}
 
   \item{minCov}{Minumum sequencing coverage required to
   report methylation/conversion estimates}

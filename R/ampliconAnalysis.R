@@ -52,8 +52,9 @@ ampliconGRanges <- function(x, genome, mc.cores=1) {
 #' Start to finish analysis of MiSeq bisulfite amplicon sequencing data
 #'
 #' @param amplicon_file Filename of the \code{csv} to read in amplicon data from
-#' @param genome \code{BSgenome} to map the amplicons to
 #' @param bams A named \code{character} vector of bams to be analysed for the supplied amplicons
+#' @param genome \code{BSgenome} to map the amplicons to
+#' @param paired \code{boolean} of whether to only load properly paired reads from the bams
 #' @param minCov Minumum sequencing coverage required to report methylation/conversion estimates
 #' @param min.map.q Minumum mapping quality for reads to be included in the analysis, set to 0 for no filtering
 #' @param mc.cores Number of cores to use during processing
@@ -69,7 +70,7 @@ ampliconGRanges <- function(x, genome, mc.cores=1) {
 #' @importFrom Rsamtools ScanBamParam scanBamFlag
 #'
 #' @author Aaron Statham <a.statham@@garvan.org.au>
-ampliconAnalysis <- function(amplicon_file, bams, genome, minCov=50, min.map.q=40, mc.cores=1) {
+ampliconAnalysis <- function(amplicon_file, bams, genome, paired=TRUE, minCov=50, min.map.q=40, mc.cores=1) {
     # Quick checks
     stopifnot(file.exists(amplicon_file))
     stopifnot(all(file.exists(bams)))
@@ -98,9 +99,10 @@ ampliconAnalysis <- function(amplicon_file, bams, genome, minCov=50, min.map.q=4
     amplicon.bases <- amplicon.bases[!amplicon.bases %over% unlist(amplicons$primers)]
     rm(tmp)
     
-    # Read in libraries (Paired only?)
+    # Read in libraries
     message("Reading in aligned sequencing libraries")
-    libs <- mclapply(bams, readGAlignments, param=ScanBamParam(flag=scanBamFlag(isPaired=TRUE, isProperPair=TRUE), what=c("seq", "mapq")), mc.cores=mc.cores)
+    if (paired) flags <- scanBamFlag(isPaired=TRUE, isProperPair=TRUE) else flags <- scanBamFlag()
+    libs <- mclapply(bams, readGAlignments, param=ScanBamParam(flag=flags, what=c("seq", "mapq")), mc.cores=mc.cores)
     if (min.map.q>0) libs <- endoapply(libs, function(x) x[values(x)$mapq>=min.map.q])
     seqlevels(amplicons, force=TRUE) <- seqlevels(amplicon.bases, force=TRUE) <- seqlevels(libs[[1]]) # for pileup
     
