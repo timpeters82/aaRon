@@ -3,7 +3,7 @@
 \alias{overlapRatios}
 \title{overlapRatios}
 \usage{
-overlapRatios(x, y, C, cov, minCov = 5)
+overlapRatios(x, y, C, cov, minCov = 5, na.rm = FALSE)
 }
 \arguments{
   \item{x}{The \code{GRanges} object to find overlaps upon}
@@ -19,6 +19,9 @@ overlapRatios(x, y, C, cov, minCov = 5)
 
   \item{minCov}{Minimum per-range coverage required to
   return a ratio}
+
+  \item{na.rm}{Logical indicating whether or not to include
+  missing values in the results}
 }
 \value{
 A \code{numeric} vector of the same length as \code{y} with

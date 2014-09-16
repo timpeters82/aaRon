@@ -58,7 +58,7 @@ findNDRs <- function(x, samples, p.cutoff=15, windowWidth=100, windowBy=20, minS
 	    # find regions that meet the cutoff on pvalue and size
 		message(" - Finding significant regions")
         windows.cutoff <- reduce(windows[which(windows.pvals>p.cutoff)])
-        windows.cutoff$p.mean <- overlapMeans(windows, windows.cutoff, windows.pvals)
+        windows.cutoff$p.mean <- overlapMeans(windows, windows.cutoff, windows.pvals, na.rm=TRUE)
         windows.cutoff <- windows.cutoff[width(windows.cutoff)>=minSize]
 	}))
 

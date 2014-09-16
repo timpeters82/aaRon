@@ -3,7 +3,7 @@
 \alias{overlapMeans}
 \title{overlapMeans}
 \usage{
-overlapMeans(x, y, z)
+overlapMeans(x, y, z, na.rm = FALSE)
 }
 \arguments{
   \item{x}{The \code{GRanges} object to find overlaps upon}
@@ -13,6 +13,9 @@ overlapMeans(x, y, z)
 
   \item{z}{The \code{numeric} or \code{integer} vector
   associated with the GRanges \code{x}}
+
+  \item{na.rm}{Logical indicating whether or not to include
+  missing values in the results}
 }
 \value{
 A \code{numeric} vector of the same length as \code{y} with

@@ -5,6 +5,7 @@
 #' @param x The \code{GRanges} object to find overlaps upon
 #' @param y The \code{GRanges} object of regions of interest
 #' @param z The \code{numeric} or \code{integer} vector associated with the GRanges \code{x}
+#' @param na.rm Logical indicating whether or not to include missing values in the results
 #' @return A \code{numeric} vector of the same length as \code{y} with per-range means of \code{z}
 #'
 #' @export
@@ -13,14 +14,14 @@
 #' @importFrom IRanges viewMeans Views ranges Rle as.matrix
 #'
 #' @author Aaron Statham <a.statham@@garvan.org.au>
-overlapMeans <- function(x, y, z) {
+overlapMeans <- function(x, y, z, na.rm=FALSE) {
     stopifnot(class(x)=="GRanges")
     stopifnot(class(y)=="GRanges")
     stopifnot(class(z)=="numeric" | class(z)=="integer")
     stopifnot(length(x)==length(z))
     ov <- as.matrix(findOverlaps(y, x))
     ovMeans <- rep(as.numeric(NA), length(y))
-    ovMeans[unique(ov[,1])] <- viewMeans(Views(z[ov[,2]], ranges(Rle(ov[,1]))))
+    ovMeans[unique(ov[,1])] <- viewMeans(Views(z[ov[,2]], ranges(Rle(ov[,1]))), na.rm=na.rm)
     ovMeans
 }
 
@@ -32,6 +33,7 @@ overlapMeans <- function(x, y, z) {
 #' @param x The \code{GRanges} object to find overlaps upon
 #' @param y The \code{GRanges} object of regions of interest
 #' @param z The \code{numeric} or \code{integer} vector associated with the GRanges \code{x}
+#' @param na.rm Logical indicating whether or not to include missing values in the results
 #' @return A \code{numeric} vector of the same length as \code{y} with per-range sums of \code{z}
 #'
 #' @export
@@ -40,14 +42,14 @@ overlapMeans <- function(x, y, z) {
 #' @importFrom IRanges viewSums Views ranges Rle
 #'
 #' @author Aaron Statham <a.statham@@garvan.org.au>
-overlapSums <- function(x, y, z) {
+overlapSums <- function(x, y, z, na.rm=FALSE) {
     stopifnot(class(x)=="GRanges")
     stopifnot(class(y)=="GRanges")
     stopifnot(class(z)=="numeric" | class(z)=="integer")
     stopifnot(length(x)==length(z))
     ov <- as.matrix(findOverlaps(y, x))
     ovSums <- rep(as.numeric(NA), length(y))
-    ovSums[unique(ov[,1])] <- viewSums(Views(z[ov[,2]], ranges(Rle(ov[,1]))))
+    ovSums[unique(ov[,1])] <- viewSums(Views(z[ov[,2]], ranges(Rle(ov[,1]))), na.rm=na.rm)
     ovSums
 }
 
@@ -61,14 +63,15 @@ overlapSums <- function(x, y, z) {
 #' @param C The numerator vector associated with the GRanges \code{x}
 #' @param cov The denominator vector associated with the GRanges \code{x}
 #' @param minCov Minimum per-range coverage required to return a ratio
+#' @param na.rm Logical indicating whether or not to include missing values in the results
 #' @return A \code{numeric} vector of the same length as \code{y} with per-range ratios of C/cov of \code{z}
 #'
 #' @export
 #' 
 #' @author Aaron Statham <a.statham@@garvan.org.au>
-overlapRatios <- function(x, y, C, cov, minCov=5) {
-    C.sum <- overlapSums(x, y, values(x)[[C]])
-    cov.sum <- overlapSums(x, y, values(x)[[cov]])
+overlapRatios <- function(x, y, C, cov, minCov=5, na.rm=FALSE) {
+    C.sum <- overlapSums(x, y, values(x)[[C]], na.rm=na.rm)
+    cov.sum <- overlapSums(x, y, values(x)[[cov]], na.rm=na.rm)
     rat <- C.sum/cov.sum
     rat[cov.sum<minCov] <- NA
     rat
