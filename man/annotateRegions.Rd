@@ -23,7 +23,6 @@ coding only)} \item{distanceTSS}{Distance to closest TSS}
 \item{tx_name}{Gencode tx_name} \item{tx_type}{Gencode
 tx_type} \item{gene_id}{Gencode gene_id}
 \item{gene_name}{Gencode gene_name}
-\item{result}{Expression result from \code{gx}}
 \item{distanceTSS_prot}{Distance to closest TSS (protein
 coding only)} \item{TSS_prot}{Index of the closest TSS in
 tx (protein coding only)} \item{tx_name_prot}{Gencode
@@ -31,9 +30,8 @@ tx_name (protein coding only)} \item{tx_type_prot}{Gencode
 tx_type (protein coding only)} \item{gene_id_prot}{Gencode
 gene_id (protein coding only)} \item{gene_name_prot}{
 (Gencode gene_name protein coding only)}
-\item{result}{Expression result from \code{gx} (protein
-coding only)} \item{distanceCpGi}{Distance to the closest
-CpG island} \item{CpGi}{Index of the closest CpG island in
+\item{distanceCpGi}{Distance to the closest CpG island}
+\item{CpGi}{Index of the closest CpG island in
 \code{CpGislands}} \item{promoter}{Proportion overlapping a
 \code{tx} promoter (+/- 2kb from TSS)}
 \item{genebody}{Proportion overlapping a \code{tx}

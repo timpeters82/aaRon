@@ -89,7 +89,7 @@ overlapRatios <- function(x, y, C, cov, minCov=5, na.rm=FALSE) {
 #'
 #' @export
 #' 
-#' @importFrom GenomicRanges seqlevels coverage width
+#' @importFrom GenomicRanges strand findOverlaps reduce order seqlevels coverage width
 #' @importFrom IRanges viewSums Views
 #'
 #' @author Aaron Statham <a.statham@@garvan.org.au>
@@ -103,7 +103,7 @@ coverageRatio <- function(query, subject, ratio=TRUE) {
         subject <- reduce(subject)
     }
     # Fucking Views use Fucking RangesLists which do not fucking preserve order
-    oo <- order(query)
+    oo <- GenomicRanges::order(query)
     chr.oo <- unique(as.character(seqnames(query[oo])))
     seqlevels(query, force=TRUE) <- chr.oo
     query.cov <- viewSums(Views(coverage(subject)[chr.oo], as(query[oo], "RangesList")))

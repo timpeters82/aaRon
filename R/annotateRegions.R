@@ -15,14 +15,12 @@
 #'  \item{tx_type}{Gencode tx_type}
 #'  \item{gene_id}{Gencode gene_id}
 #'  \item{gene_name}{Gencode gene_name}
-#'  \item{result}{Expression result from \code{gx}}
 #'  \item{distanceTSS_prot}{Distance to closest TSS (protein coding only)}
 #'  \item{TSS_prot}{Index of the closest TSS in tx (protein coding only)}
 #'  \item{tx_name_prot}{Gencode tx_name (protein coding only)}
 #'  \item{tx_type_prot}{Gencode tx_type (protein coding only)}
 #'  \item{gene_id_prot}{Gencode gene_id (protein coding only)}
 #'  \item{gene_name_prot}{ (Gencode gene_name protein coding only)}
-#'  \item{result}{Expression result from \code{gx} (protein coding only)}
 #'  \item{distanceCpGi}{Distance to the closest CpG island}
 #'  \item{CpGi}{Index of the closest CpG island in \code{CpGislands}}
 #'  \item{promoter}{Proportion overlapping a \code{tx} promoter (+/- 2kb from TSS)}
@@ -63,7 +61,6 @@ annotateRegions <- function(reg, gx, tx, CpGislands) {
     reg$tx_type <- tx$tx_type[reg$TSS]
     reg$gene_id <- tx$gene_name[reg$TSS]
     reg$gene_name <- tx$symbol[reg$TSS]
-    reg$result <- gx[tx$gene_name[reg$TSS]]$result
 
     # Distance to closest protein-coding TSS
     reg.dist <- as.data.frame(distanceToNearest(reg, resize(tx2, 1, fix="start")))
@@ -72,7 +69,6 @@ annotateRegions <- function(reg, gx, tx, CpGislands) {
     reg$tx_name_prot <- tx2$tx_name[reg$TSS_prot]
     reg$gene_id_prot <- tx2$gene_name[reg$TSS_prot]
     reg$gene_name_prot <- tx2$symbol[reg$TSS_prot]
-    reg$result_prot <- gx[tx2$gene_name[reg$TSS_prot]]$result
 
     # Distance to closest CpG island
     reg.dist <- as.data.frame(distanceToNearest(reg, CpGislands))
@@ -89,6 +85,16 @@ annotateRegions <- function(reg, gx, tx, CpGislands) {
     reg$genebody <- coverageRatio(reg, genebodyGR)
     reg$intergenic <- coverageRatio(reg, intergenicGR)
     
+    # % protein coding promoter/genebody/intergenic (2kb up and down)
+    promotersGR <- reduce(strip(resize(resize(tx2, 1, fix="start"), 4000, fix="center")))
+    genebodyGR <- setdiff(reduce(strip(tx2)), promotersGR)
+    genomeGR <- GRanges(seqlevels(tx2), IRanges(1, seqlengths(tx2)))
+    intergenicGR <- setdiff(setdiff(genomeGR, genebodyGR), promotersGR)
+
+    reg$promoter_prot <- coverageRatio(reg, promotersGR)
+    reg$genebody_prot <- coverageRatio(reg, genebodyGR)
+    reg$intergenic_prot <- coverageRatio(reg, intergenicGR)
+
     # % CpG island/CpG shore/nonCpG
     reg$CpGisland <- coverageRatio(reg, CpGislands)
     CpGshores <- reduce(c(flank(CpGislands, width=2000, start=TRUE), flank(CpGislands, width=2000, start=FALSE)))
