@@ -3,18 +3,13 @@
 \alias{strip}
 \title{strip}
 \usage{
-strip(x, genome, chrs = 1:24)
+strip(x)
 }
 \arguments{
   \item{x}{A \code{GRanges} objext}
-
-  \item{genome}{\code{BSgenome} object}
-
-  \item{chrs}{Chromosomes to limit \code{x} to}
 }
 \value{
-Reduced \code{GRanges} of restricted chromosomes, with no
-strand or element metadata
+Reduced \code{GRanges} with no strand or element metadata
 }
 \description{
 Cleans up a \code{GRanges} object
