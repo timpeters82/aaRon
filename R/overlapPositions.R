@@ -3,7 +3,7 @@
 #' Returns the positions where \code{subject} ranges overlap the \code{query}
 #'
 #' @param query \code{GRanges} of query regions
-#' @param subject \code{GRanges} of subject regions (must be of width 1)
+#' @param subject \code{GRanges} of subject regions (must be of width 1 and unstranded)
 #' @return Positions where \code{subject} ranges overlap the \code{query} ranges
 #'
 #' @export
@@ -14,6 +14,7 @@
 #' @author Aaron Statham <a.statham@@garvan.org.au>
 overlapPositions <- function(query, subject) {
     stopifnot(all(width(subject)==1))
+    stopifnot(all(strand(subject)=="*"))
     mm <- as.matrix(findOverlaps(query, subject))
     start(subject)[mm[,2]]-start(query)[mm[,1]]
 }
@@ -65,3 +66,67 @@ overlapBoundaries <- function(query, subject, distance=10000, boundary=c("both",
     bp
 }
 
+#' overlapRegions
+#'
+#' Returns the relative position of \code{subject} sites within \code{query} regions
+#'
+#' @param query \code{GRanges} of query regions
+#' @param subject \code{GRanges} of subject regions (must be of width 1 and unstranded)
+#' @return \code{data.frame} of index and position
+#'
+#' @export
+#'
+#' @importFrom GenomicRanges width strand strand<- findOverlaps
+#' @importFrom IRanges subjectHits queryHits
+#'
+#' @author Aaron Statham <a.statham@@garvan.org.au>
+overlapRegions <- function(query, subject) {
+    stopifnot(all(width(subject)==1))
+    stopifnot(all(strand(subject)=="*"))
+    if (!(all(strand(query)=="*") | all(strand(query)!="*")))
+        stop("Query ranges must be either all stranded or all unstranded, not a mixture")
+    strand(query)[strand(query)=="*"] <- "+"
+    ov <- findOverlaps(query, subject)
+    res <- data.frame(index=subjectHits(ov))
+    # correct for strand
+    res$position <- ifelse(as.character(strand(query))[queryHits(ov)]=="+", overlapPositions(query, subject),
+                    width(query[queryHits(ov)])-overlapPositions(query, subject))
+    if (!is.null(query$ref)) {
+        res$position <- res$position-(query$ref[queryHits(ov)]-start(query)[queryHits(ov)])
+    }
+    res
+}
+
+#' overlapRegionFlanks
+#'
+#' Returns the relative position \code{subject} sites around \code{query} regions \code{start} positions if stranded, or around \code{query} region centres if unstranded
+#'
+#' @param query \code{GRanges} of query regions
+#' @param subject \code{GRanges} of subject regions (must be of width 1 and unstranded)
+#' @param up Distance upstream to find overlaps
+#' @param down Distance downstream to find overlaps
+#' @return \code{data.frame} of index and position
+#'
+#' @export
+#'
+#' @importFrom GenomicRanges strand resize start end promoters
+#'
+#' @author Aaron Statham <a.statham@@garvan.org.au>
+overlapRegionFlanks <- function(query, subject, up=1000, down=1000) {
+    stopifnot(up>0 & down>0)
+    stopifnot(all(strand(subject)=="*"))
+    if (!(all(strand(query)=="*") | all(strand(query)!="*")))
+        stop("Query ranges must be either all stranded or all unstranded, not a mixture")
+
+    # Create flanking regions
+    if (all(strand(query)=="*")) { # Unstranded
+        ROI <- resize(query, 1, fix="center")
+        ROI$ref <- start(ROI)
+        strand(ROI) <- "+"
+        ROI <- promoters(ROI, up, down)
+    } else {
+        ROI <- promoters(query, up, down)
+        ROI$ref <- ifelse(as.character(strand(query))=="+", start(query), end(query))
+    }
+    overlapRegions(ROI, subject)
+}
