@@ -3,6 +3,7 @@
 export(ampliconAnalysis)
 export(ampliconGRanges)
 export(annotateRegions)
+export(annotateRegionsByInteractions)
 export(binarizeFromPeaks)
 export(coverageBarplot)
 export(coverageRatio)
