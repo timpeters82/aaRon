@@ -1,14 +1,15 @@
 Package: aaRon
 Title: aaRon's functions
 Description: Various functions for NGS/WGBS analysis
-Version: 0.7.9
+Version: 0.8.0
 Authors@R: c(person(given=c("Aaron", "L."), family="Statham", role=c("aut",
     "cre"), email="a.statham@garvan.org.au"))
 Depends:
-    R (>= 3.1.0)
+    R (>= 3.1.0),
+    GenomicRanges
 Imports:
-    GenomicRanges,
     GenomicAlignments,
+    GenomeInfoDb,
     Rsamtools,
     Biostrings,
     IRanges,
@@ -19,7 +20,9 @@ Imports:
     ggplot2,
     zoo,
     minfi,
-    reshape2
+    reshape2,
+    stringr,
+    data.table
 License: LGPL (>= 2)
 LazyData: true
 Roxygen: list(wrap = TRUE)

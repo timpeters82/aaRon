@@ -3,8 +3,7 @@
 #' Annotate regions with respect to gene and CpG island annotations
 #'
 #' @param reg The \code{GRanges} to be annotated
-#' @param gx \code{GRanges} of gene expression
-#' @param tx \code{GRanges} of transcript expression
+#' @param tx \code{GRanges} of transcripts, annotated with \code{gene_name}, \code{gene_id}, \code{tx_id} and \code{tx_type}
 #' @param CpGislands \code{GRanges} of CpG island positions
 #' @return \code{reg} with additional per region metadata:
 #'  \item{nGeneTSS}{Number of TSSs overlapping}
@@ -36,8 +35,13 @@
 #' @importFrom IRanges IRanges
 #'
 #' @author Aaron Statham <a.statham@@garvan.org.au>
-annotateRegions <- function(reg, gx, tx, CpGislands) {
+annotateRegions <- function(reg, tx, CpGislands) {
+    if (!all(c("gene_name", "gene_id", "tx_id", "tx_type") %in% names(values(tx)))) stop("Supplied tx does not contain all required columns, was it created by makeTx?")
 
+    if (!(all(as.character(seqnames(reg)) %in% seqlevels(tx)))) {
+        message("Removing seqlevels/regions from 'reg' that are not represented present in supplied 'tx'")
+        seqlevels(reg, force=TRUE) <- seqlevels(tx)
+    }
     # Want to do most analysis for "just" protein coding as well as all genes
     tx2 <- tx[tx$tx_type=="protein_coding"]
 
@@ -57,18 +61,18 @@ annotateRegions <- function(reg, gx, tx, CpGislands) {
     reg.dist <- as.data.frame(distanceToNearest(reg, resize(tx, 1, fix="start")))
     reg$distanceTSS <- reg.dist$distance
     reg$TSS <- reg.dist$subjectHits
-    reg$tx_name <- tx$tx_name[reg$TSS]
+    reg$tx_id <- tx$tx_id[reg$TSS]
     reg$tx_type <- tx$tx_type[reg$TSS]
-    reg$gene_id <- tx$gene_name[reg$TSS]
-    reg$gene_name <- tx$symbol[reg$TSS]
+    reg$gene_id <- tx$gene_id[reg$TSS]
+    reg$gene_name <- tx$gene_name[reg$TSS]
 
     # Distance to closest protein-coding TSS
     reg.dist <- as.data.frame(distanceToNearest(reg, resize(tx2, 1, fix="start")))
     reg$distanceTSS_prot <- reg.dist$distance
     reg$TSS_prot <- reg.dist$subjectHits
-    reg$tx_name_prot <- tx2$tx_name[reg$TSS_prot]
-    reg$gene_id_prot <- tx2$gene_name[reg$TSS_prot]
-    reg$gene_name_prot <- tx2$symbol[reg$TSS_prot]
+    reg$tx_id_prot <- tx2$tx_id[reg$TSS_prot]
+    reg$gene_id_prot <- tx2$gene_id[reg$TSS_prot]
+    reg$gene_name_prot <- tx2$gene_name[reg$TSS_prot]
 
     # Distance to closest CpG island
     reg.dist <- as.data.frame(distanceToNearest(reg, CpGislands))
@@ -97,7 +101,7 @@ annotateRegions <- function(reg, gx, tx, CpGislands) {
 
     # % CpG island/CpG shore/nonCpG
     reg$CpGisland <- coverageRatio(reg, CpGislands)
-    CpGshores <- reduce(c(flank(CpGislands, width=2000, start=TRUE), flank(CpGislands, width=2000, start=FALSE)))
+    CpGshores <- setdiff(reduce(resize(CpGislands, width(CpGislands)+4000, fix="center")), CpGislands)
     reg$CpGshores <- coverageRatio(reg, CpGshores)
     reg$nonCpG <- coverageRatio(reg, setdiff(setdiff(genomeGR, CpGislands), CpGshores))
 
