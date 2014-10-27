@@ -137,6 +137,7 @@ methylationPlotSamples <- function(meth, regions, samples, GpC, main="", up=1000
 #' @author Aaron Statham <a.statham@@garvan.org.au>
 methylationBiPlot <- function(methGpC, methCpG, regions, samples, main="", up=1000, down=1000, every=10, width=50, minCov=5, addN=TRUE) {
     position <- value <- Data <- NULL # FUCK OFF R CMD CHECK
+    stopifnot(nrow(samples)==1)
     if (!class(regions)=="GRanges") stop("regions must be a GRanges")
     meth <- list("Occupancy"=methGpC[values(methGpC)[[samples$cov]]>=minCov],
                "Methylation"=methCpG[values(methCpG)[[samples$cov]]>=minCov])

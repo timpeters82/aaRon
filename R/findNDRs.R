@@ -12,7 +12,8 @@
 #' 
 #' importFrom compiler cmpfun
 #' importFrom Repitools genomeBlocks
-#' importFrom GenomicRanges seqlengths findOverlaps GRangesList values reduce width
+#' importFrom GenomeInfoDb seqlengths
+#' importFrom GenomicRanges findOverlaps GRangesList values reduce width
 #'
 #' @export
 #'

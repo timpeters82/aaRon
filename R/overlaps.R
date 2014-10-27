@@ -11,7 +11,8 @@
 #' @export
 #' 
 #' @importFrom GenomicRanges findOverlaps
-#' @importFrom IRanges viewMeans Views ranges Rle as.matrix
+#' @importFrom IRanges viewMeans Views ranges as.matrix
+#' @importFrom S4Vectors Rle
 #'
 #' @author Aaron Statham <a.statham@@garvan.org.au>
 overlapMeans <- function(x, y, z, na.rm=FALSE) {
@@ -39,7 +40,8 @@ overlapMeans <- function(x, y, z, na.rm=FALSE) {
 #' @export
 #' 
 #' @importFrom GenomicRanges findOverlaps
-#' @importFrom IRanges viewSums Views ranges Rle
+#' @importFrom IRanges viewSums Views ranges
+#' @importFrom S4Vectors Rle
 #'
 #' @author Aaron Statham <a.statham@@garvan.org.au>
 overlapSums <- function(x, y, z, na.rm=FALSE) {
@@ -89,7 +91,8 @@ overlapRatios <- function(x, y, C, cov, minCov=5, na.rm=FALSE) {
 #'
 #' @export
 #' 
-#' @importFrom GenomicRanges strand findOverlaps reduce order seqlevels coverage width
+#' @importFrom GenomeInfoDb seqlevels
+#' @importFrom GenomicRanges strand findOverlaps reduce order coverage width
 #' @importFrom IRanges viewSums Views
 #'
 #' @author Aaron Statham <a.statham@@garvan.org.au>

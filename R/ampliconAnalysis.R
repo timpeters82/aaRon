@@ -62,8 +62,10 @@ ampliconGRanges <- function(x, genome, mc.cores=1) {
 #'
 #' @export
 #'
-#' @importFrom GenomicRanges GRangesList GRanges seqnames start end strand values seqlevels seqlevels countOverlaps resize subsetByOverlaps
-#' @importFrom IRanges IRanges endoapply elementLengths DataFrame %over% cbind as.data.frame
+#' @importFrom GenomicRanges GRangesList GRanges seqnames start end strand values countOverlaps resize subsetByOverlaps
+#' @importFrom GenomeInfoDb seqlevels
+#' @importFrom IRanges IRanges endoapply elementLengths %over% cbind as.data.frame
+#' @importFrom S4Vectors DataFrame
 #' @importFrom Biostrings getSeq complement letterFrequency
 #' @importFrom parallel mclapply
 #' @importFrom GenomicAlignments readGAlignments pileLettersAt cigar

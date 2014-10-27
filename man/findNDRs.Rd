@@ -29,8 +29,8 @@ findNDRs(x, samples, p.cutoff = 15, windowWidth = 100, windowBy = 20,
 mean pvalue for each region
 
 importFrom compiler cmpfun importFrom Repitools
-genomeBlocks importFrom GenomicRanges seqlengths
-findOverlaps GRangesList values reduce width
+genomeBlocks importFrom GenomeInfoDb seqlengths importFrom
+GenomicRanges findOverlaps GRangesList values reduce width
 }
 \description{
 Find NDRs in NOMe-seq data using a sliding window

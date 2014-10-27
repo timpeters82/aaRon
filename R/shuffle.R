@@ -7,6 +7,7 @@
 #'
 #' @export
 #'
+#' @importFrom GenomeInfoDb seqlengths
 #' @importFrom GenomicRanges width width<- findOverlaps start
 #' @importFrom IRanges as.matrix IRanges
 #'
@@ -38,7 +39,8 @@ projectOnto <- function(pos, avail) {
 #'
 #' @export
 #'
-#' @importFrom GenomicRanges seqlengths seqlengths<- seqnames seqlevels seqlevels<- start end width
+#' @importFrom GenomeInfoDb seqlengths seqlengths<-
+#' @importFrom GenomicRanges seqnames start end width
 #' @importFrom rtracklayer import.bed
 #'
 #' @author Aaron Statham <a.statham@@garvan.org.au>

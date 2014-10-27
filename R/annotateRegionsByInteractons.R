@@ -10,7 +10,7 @@
 #'
 #' @export
 #'
-#' @importFrom GenomicRanges findOverlaps distanceToNearest resize setdiff flank
+#' @importFrom GenomicRanges findOverlaps resize setdiff flank distance
 #' @importFrom IRanges IRanges
 #'
 #' @author Aaron Statham <a.statham@@garvan.org.au>
@@ -22,7 +22,8 @@ annotateRegionsByInteractions <- function(reg, tx, interactions, distance=2000) 
         seqlevels(reg, force=TRUE) <- seqlevels(tx)
     }
 
-    TSS <- resize(resize(tx, 1, fix="start"), distance*2, fix="center")
+    TSS.1 <- resize(tx, 1, fix="start")
+    TSS <- resize(TSS.1, distance*2, fix="center")
 
     # annotate interactions with promoters within distance
     message("Annotating interaction fragments with TSSs")
@@ -34,7 +35,7 @@ annotateRegionsByInteractions <- function(reg, tx, interactions, distance=2000) 
     rm(int.TSS, tmp)
 
     # Overlap regions and interactions
-    reg.TSSs <- reg.frags <- reg.frag.TSSs <- reg.pairs <- reg.pair.TSSs  <- rep(list(integer(0)), length(reg))
+    reg.TSSs <- reg.frags <- reg.frag.TSSs <- reg.pairs <- reg.pair.TSSs <- rep(list(integer(0)), length(reg))
 
     # TSSs directly overlapped by reg
     message("Finding regions directly overlapping a TSS")
@@ -79,6 +80,10 @@ annotateRegionsByInteractions <- function(reg, tx, interactions, distance=2000) 
     reg.pair.TSSs[as.integer(names(tmp.pair.TSSs))] <- unname(tmp.pair.TSSs)
     reg$pair.TSSs <- IntegerList(reg.pair.TSSs)
     rm(reg.pair.TSSs, tmp.pairs, tmp.pair.TSSs)
+
+    # Distance to distal TSSs
+    message(" * Calculating distance between regions and paired TSSs")
+    reg$pair.TSS.dists <- relist(distance(rep(reg, elementLengths(reg$pair.TSSs)), TSS.1[unlist(reg$pair.TSSs)]), reg$pair.TSSs)
 
     # Try to summarize peak
     message("Summarising overlaps")
