@@ -3,7 +3,7 @@
 \alias{methDensityPlot}
 \title{methDensityPlot}
 \usage{
-methDensityPlot(x, samples, title)
+methDensityPlot(x, samples, title, cols = NULL)
 }
 \arguments{
   \item{x}{A \code{GRanges}, \code{matrix} or
@@ -13,6 +13,8 @@ methDensityPlot(x, samples, title)
   to plot}
 
   \item{title}{Title for the plot}
+
+  \item{cols}{Named vector of colours to use}
 }
 \value{
 Called for the side effect of plotting
