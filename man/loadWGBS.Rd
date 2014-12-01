@@ -3,7 +3,7 @@
 \alias{loadWGBS}
 \title{loadWGBS}
 \usage{
-loadWGBS(path, build)
+loadWGBS(path, build = NULL)
 }
 \arguments{
   \item{path}{The path to the project.csv and bigTable.tsv}

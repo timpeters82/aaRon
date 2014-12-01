@@ -14,7 +14,7 @@
 #' @importFrom IRanges IRanges
 #'
 #' @author Aaron Statham <a.statham@@garvan.org.au>
-loadWGBS <- function(path, build) {
+loadWGBS <- function(path, build=NULL) {
 	stopifnot(all(file.exists(paste0(path, c("/bigTable.tsv", "/project.csv")))))
 	NOMe <- file.exists(paste0(path, "/bigTable.GCH.tsv"))
 
@@ -30,7 +30,7 @@ loadWGBS <- function(path, build) {
 	values(CpGs) <- as.data.frame(tab)[,-c(1:2)]
 	# fix for sample names that start with a number
 	names(values(CpGs)) <- colnames(tab)[-c(1:2)]
-	seqlengths(CpGs) <- seqlengths(build)[seqlevels(CpGs)]
+	if (!is.null(build)) seqlengths(CpGs) <- seqlengths(build)[seqlevels(CpGs)]
 	rm(tab)
 
 	# Sanity checks
@@ -44,7 +44,7 @@ loadWGBS <- function(path, build) {
 	    values(GCH) <- as.data.frame(tab)[,-c(1:2)]
 	    # fix for sample names that start with a number
 	    names(values(GCH)) <- colnames(tab)[-c(1:2)]
-	    seqlengths(GCH) <- seqlengths(build)[seqlevels(GCH)]
+	    if (!is.null(build)) seqlengths(GCH) <- seqlengths(build)[seqlevels(GCH)]
 	    rm(tab)
 
 	    # Sanity checks
