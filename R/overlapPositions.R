@@ -87,7 +87,7 @@ overlapRegions <- function(query, subject) {
         stop("Query ranges must be either all stranded or all unstranded, not a mixture")
     strand(query)[strand(query)=="*"] <- "+"
     ov <- findOverlaps(query, subject)
-    res <- data.frame(index=subjectHits(ov))
+    res <- data.frame(query=queryHits(ov), index=subjectHits(ov))
     # correct for strand
     res$position <- ifelse(as.character(strand(query))[queryHits(ov)]=="+", overlapPositions(query, subject),
                     width(query[queryHits(ov)])-overlapPositions(query, subject))

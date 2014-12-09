@@ -3,12 +3,16 @@
 \alias{grangesVenn}
 \title{grangesVenn}
 \usage{
-grangesVenn(x, plot = TRUE, ...)
+grangesVenn(x, plot = TRUE, basepair = FALSE, ...)
 }
 \arguments{
   \item{x}{\code{GRangesList} of interest}
 
-  \item{plot}{Whether to plot after calculating the}
+  \item{plot}{Whether to plot after calculating the
+  intersections}
+
+  \item{basepair}{Whether to calculate the intersections on
+  a per-basepair level rather than per region}
 
   \item{...}{Additional parameters passed on to
   vennDiagram}
