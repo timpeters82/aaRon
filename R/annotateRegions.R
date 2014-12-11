@@ -31,17 +31,18 @@
 #'
 #' @export
 #' 
+#' @importFrom GenomeInfoDb seqlevels seqlengths
 #' @importFrom GenomicRanges findOverlaps distanceToNearest resize setdiff flank
 #' @importFrom IRanges IRanges
 #'
 #' @author Aaron Statham <a.statham@@garvan.org.au>
 annotateRegions <- function(reg, tx, CpGislands) {
     if (!all(c("gene_name", "gene_id", "tx_id", "tx_type") %in% names(values(tx)))) stop("Supplied tx does not contain all required columns, was it created by makeTx?")
+    stopifnot(all(!is.na(seqlengths(tx))))
 
-    if (!(all(as.character(seqnames(reg)) %in% seqlevels(tx)))) {
-        message("Removing seqlevels/regions from 'reg' that are not represented present in supplied 'tx'")
-        seqlevels(reg, force=TRUE) <- seqlevels(tx)
-    }
+    all.levels <- unique(c(seqlevels(reg), seqlevels(tx), seqlevels(CpGislands)))
+    seqlevels(reg) <- seqlevels(tx) <- seqlevels(CpGislands) <- all.levels
+
     # Want to do most analysis for "just" protein coding as well as all genes
     tx2 <- tx[tx$tx_type=="protein_coding"]
 
@@ -80,20 +81,20 @@ annotateRegions <- function(reg, tx, CpGislands) {
     reg$CpGi <- reg.dist$subjectHits
 
     # % promoter/genebody/intergenic (2kb up and down)
-    promotersGR <- reduce(strip(resize(resize(tx, 1, fix="start"), 4000, fix="center")))
-    genebodyGR <- setdiff(reduce(strip(tx)), promotersGR)
+    promotersGR <- suppressWarnings(reduce(strip(resize(resize(tx, 1, fix="start"), 4000, fix="center"))))
+    genebodyGR <- suppressWarnings(setdiff(reduce(strip(tx)), promotersGR))
     genomeGR <- GRanges(seqlevels(tx), IRanges(1, seqlengths(tx)))
-    intergenicGR <- setdiff(setdiff(genomeGR, genebodyGR), promotersGR)
+    intergenicGR <- suppressWarnings(setdiff(setdiff(genomeGR, genebodyGR), promotersGR))
 
     reg$promoter <- coverageRatio(reg, promotersGR)
     reg$genebody <- coverageRatio(reg, genebodyGR)
     reg$intergenic <- coverageRatio(reg, intergenicGR)
     
     # % protein coding promoter/genebody/intergenic (2kb up and down)
-    promotersGR <- reduce(strip(resize(resize(tx2, 1, fix="start"), 4000, fix="center")))
-    genebodyGR <- setdiff(reduce(strip(tx2)), promotersGR)
-    genomeGR <- GRanges(seqlevels(tx2), IRanges(1, seqlengths(tx2)))
-    intergenicGR <- setdiff(setdiff(genomeGR, genebodyGR), promotersGR)
+    promotersGR <- suppressWarnings(reduce(strip(resize(resize(tx2, 1, fix="start"), 4000, fix="center"))))
+    genebodyGR <- suppressWarnings(setdiff(reduce(strip(tx2)), promotersGR))
+    genomeGR <- suppressWarnings(GRanges(seqlevels(tx2), IRanges(1, seqlengths(tx2))))
+    intergenicGR <- suppressWarnings(setdiff(setdiff(genomeGR, genebodyGR), promotersGR))
 
     reg$promoter_prot <- coverageRatio(reg, promotersGR)
     reg$genebody_prot <- coverageRatio(reg, genebodyGR)
@@ -101,9 +102,9 @@ annotateRegions <- function(reg, tx, CpGislands) {
 
     # % CpG island/CpG shore/nonCpG
     reg$CpGisland <- coverageRatio(reg, CpGislands)
-    CpGshores <- setdiff(reduce(resize(CpGislands, width(CpGislands)+4000, fix="center")), CpGislands)
+    CpGshores <- suppressWarnings(setdiff(reduce(resize(CpGislands, width(CpGislands)+4000, fix="center")), CpGislands))
     reg$CpGshores <- coverageRatio(reg, CpGshores)
-    reg$nonCpG <- coverageRatio(reg, setdiff(setdiff(genomeGR, CpGislands), CpGshores))
+    reg$nonCpG <- suppressWarnings(coverageRatio(reg, setdiff(setdiff(genomeGR, CpGislands), CpGshores)))
 
     reg
 }
