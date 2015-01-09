@@ -34,7 +34,8 @@ ampliconGRanges <- function(x, genome, mc.cores=1) {
 	rm(xHits)
 
 	#annotate amplicon CG sites
-	x$CGs <- mapply(function(cgs, offset) cgs+offset-1, gregexpr("CG", x$internal), start(x)+x$FW_len)
+	x$CGs <- mapply(function(cgs, offset) cgs+offset-1, gregexpr("CG", x$internal),
+        start(x)+x$FW_len, SIMPLIFY=FALSE)
 
 	#Add a GRangesList of primer positions
 	x$primers <- GRangesList(lapply(1:length(x), function(i) {
@@ -112,7 +113,8 @@ ampliconAnalysis <- function(amplicon_file, bams, genome, paired=TRUE, minCov=50
     amplicon_summary <- data.frame("No_Reads"=elementLengths(libs),
                             "On_Target_Reads"=sapply(libs, function(x) sum(x %over% amplicons)))
     amplicon_summary$On_Target_Percentage <- amplicon_summary$On_Target_Reads/amplicon_summary$No_Reads*100
-    amplicon_counts <- t(sapply(libs, function(x) countOverlaps(amplicons, x)))
+    amplicon_counts <- sapply(libs, function(x) countOverlaps(amplicons, x))
+    amplicon_counts <- if (length(amplicons)==1) as.matrix(amplicon_counts) else t(amplicon_counts)
     colnames(amplicon_counts) <- paste0(names(amps), "_Reads")
     amplicon_summary <- data.frame(amplicon_summary, amplicon_counts)
     rm(amplicon_counts)
