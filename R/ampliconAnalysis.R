@@ -111,9 +111,9 @@ ampliconAnalysis <- function(amplicon_file, bams, genome, paired=TRUE, minCov=50
     
     # Summary of how many reads hit amplicons
     amplicon_summary <- data.frame("No_Reads"=elementLengths(libs),
-                            "On_Target_Reads"=sapply(libs, function(x) sum(x %over% amplicons)))
+                            "On_Target_Reads"=sapply(libs, function(x) sum(unstrand(x) %over% amplicons)))
     amplicon_summary$On_Target_Percentage <- amplicon_summary$On_Target_Reads/amplicon_summary$No_Reads*100
-    amplicon_counts <- sapply(libs, function(x) countOverlaps(amplicons, x))
+    amplicon_counts <- sapply(libs, function(x) countOverlaps(amplicons, unstrand(x)))
     amplicon_counts <- if (length(amplicons)==1) as.matrix(amplicon_counts) else t(amplicon_counts)
     colnames(amplicon_counts) <- paste0(names(amps), "_Reads")
     amplicon_summary <- data.frame(amplicon_summary, amplicon_counts)
