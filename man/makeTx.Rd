@@ -4,7 +4,7 @@
 \alias{makeTx}
 \title{makeTx}
 \usage{
-makeTx(file, genome, type_attrib = "transcript_biotype")
+makeTx(file, genome, type_attrib = c("transcript_biotype", "source"))
 }
 \arguments{
   \item{file}{Filename to uncompressed Ensembl GTF to
@@ -14,8 +14,8 @@ makeTx(file, genome, type_attrib = "transcript_biotype")
   associated with}
 
   \item{type_attrib}{Name of the GTF attribute containing
-  the type of transcript - usually "transcript_biotype" or
-  "gene_biotype"}
+  the type of transcript - usually "transcript_biotype" but
+  for Homo_sapiens "source"}
 }
 \value{
 \code{GRanges} of transcripts with appropriate columns for

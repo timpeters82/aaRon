@@ -1,7 +1,7 @@
 Package: aaRon
 Title: aaRon's functions
 Description: Various functions for NGS/WGBS analysis
-Version: 0.8.9
+Version: 0.9.0
 Authors@R: c(person(given=c("Aaron", "L."), family="Statham", role=c("aut",
     "cre"), email="a.statham@garvan.org.au"))
 Depends:

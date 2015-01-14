@@ -141,7 +141,7 @@ ampliconAnalysis <- function(amplicon_file, bams, genome, paired=TRUE, minCov=50
     result$base <- getSeq(genome, resize(result, 2, fix="start"), as.character=TRUE)
     tmp.C <- sapply(nucl_piles, function(x) x$C.rat[x$base=="C"])
     tmp.cov <- sapply(nucl_piles, function(x) x$cov[x$base=="C"])
-    values(result) <- cbind(values(result), C=DataFrame(tmp.C), cov=DataFrame(tmp.cov))
+    values(result) <- DataFrame(values(result), C=tmp.C, cov=tmp.cov)
     rm(tmp.C)
     rm(tmp.cov)
     
