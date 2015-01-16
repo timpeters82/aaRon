@@ -105,7 +105,7 @@ ampliconAnalysis <- function(amplicon_file, bams, genome, paired=TRUE, minCov=50
     # Read in libraries
     message("Reading in aligned sequencing libraries")
     if (paired) flags <- scanBamFlag(isPaired=TRUE, isProperPair=TRUE) else flags <- scanBamFlag()
-    libs <- mclapply(bams, readGAlignments, param=ScanBamParam(flag=flags, what=c("seq", "mapq")), mc.cores=mc.cores)
+    libs <- mclapply(bams, readGAlignments, param=ScanBamParam(flag=flags, what=c("qname", "seq", "mapq")), mc.cores=mc.cores)
     if (min.map.q>0) libs <- endoapply(libs, function(x) x[values(x)$mapq>=min.map.q])
     seqlevels(amplicons, force=TRUE) <- seqlevels(amplicon.bases, force=TRUE) <- seqlevels(libs[[1]]) # for pileup
     

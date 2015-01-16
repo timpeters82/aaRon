@@ -31,7 +31,7 @@ makeTx <- function(file, genome, type_attrib=c("transcript_biotype", "source")) 
     tx <- GRanges(gtf$V1, IRanges(gtf$V4, gtf$V5), strand=gtf$V7)
 
     # collect attributes
-    attribs <- c("gene_name"="gene_name", "gene_biotype", "gene_id"="gene_id", "tx_id"="transcript_id")
+    attribs <- c("gene_name"="gene_name", "gene_type"="gene_biotype", "gene_id"="gene_id", "tx_id"="transcript_id")
     if (type_attrib=="transcript_biotype") {
         if (!any(grepl(type_attrib, gtf$V9[1:1000]))) stop("'transcript_biotype' attribute not found in supplied GTF file!")
         attribs <- c(attribs, "transcript_biotype"="transcript_biotype")

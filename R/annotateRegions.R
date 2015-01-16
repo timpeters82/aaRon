@@ -38,11 +38,11 @@
 #' @author Aaron Statham <a.statham@@garvan.org.au>
 annotateRegions <- function(reg, tx, CpGislands) {
     if (!all(c("gene_name", "gene_id", "tx_id", "tx_type") %in% names(values(tx)))) stop("Supplied tx does not contain all required columns, was it created by makeTx?")
-    stopifnot(all(!is.na(seqlengths(tx))))
 
     all.levels <- unique(c(seqlevels(reg), seqlevels(tx), seqlevels(CpGislands)))
     seqlevels(reg) <- seqlevels(tx) <- seqlevels(CpGislands) <- all.levels
 
+    stopifnot(all(!is.na(seqlengths(tx))))
     # Want to do most analysis for "just" protein coding as well as all genes
     tx2 <- tx[tx$tx_type=="protein_coding"]
 
