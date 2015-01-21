@@ -19,6 +19,7 @@
 #'
 #' @author Aaron Statham <a.statham@@garvan.org.au>
 findNDRs <- function(x, samples, p.cutoff=15, windowWidth=100, windowBy=20, minSize=140) {
+    stopifnot(all(c("Sample", "C", "cov") %in% colnames(samples)))
 	fast.chisq <- compiler::cmpfun(function(x, p) {
 	    n <- rowSums(x)
 	    E <- cbind(n * p[1], n * p[2])

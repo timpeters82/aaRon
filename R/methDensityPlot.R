@@ -16,6 +16,7 @@
 #' @author Aaron Statham <a.statham@@garvan.org.au>
 methDensityPlot <- function(x, samples, title, cols=NULL) {
 	y <- Group <- Sample <- NULL #to shut up R CMD check
+    stopifnot(all(c("Sample", "C", "cov") %in% colnames(samples)))
     if (is.null(samples$Group)) {
         samples$Group <- samples$Sample
     }

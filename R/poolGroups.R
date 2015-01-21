@@ -13,6 +13,7 @@
 #'
 #' @author Aaron Statham <a.statham@@garvan.org.au>
 poolGroups <- function(x, samples) {
+    stopifnot(all(c("Sample", "C", "cov", "Group") %in% colnames(samples)))
     groups <- unique(samples$Group)
     tmp <- unvalue(x)
     x <- as.matrix(values(x))

@@ -15,6 +15,7 @@
 #'
 #' @author Aaron Statham <a.statham@@garvan.org.au>
 methWindowRatios <- function(x, windows, samples, minCov=5, mc.cores=1) {
+    stopifnot(all(c("Sample", "C", "cov") %in% colnames(samples)))
     tmp <- simplify2array(mclapply(1:nrow(samples),
         function(i) overlapRatios(x, windows, samples$C[i], samples$cov[i]),
         mc.cores = mc.cores))

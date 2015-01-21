@@ -22,11 +22,13 @@ methMDS <- function(x, samples, smoothing=1, top=c(1, 10, 100), minCov=5, mc.cor
     smoothing <- trunc(smoothing)
     stopifnot(smoothing>0)
     stopifnot (all(top>0) && all(top<=100))
+    stopifnot(all(c("Sample", "C", "cov") %in% colnames(samples)))
     if (smoothing==1) ratios <- as.matrix(values(methRatios(x, samples, minCov)))
     else {
+        stopifnot(all(!is.na(seqlengths(x))))
         tmp <- genomeBlocks(seqlengths(x), seqlevels(x), smoothing)
         tmp <- tmp[tmp %over% x]
-        ratios <- as.matrix(values(methWindowRatios(x, tmp, samples, mc.cores=mc.cores)))
+        ratios <- as.matrix(values(methWindowRatios(x, tmp, samples, minCov, mc.cores)))
     }
     ratios <- ratios[rowMeans(is.na(ratios))<1, , drop=FALSE]
     if (nrow(ratios)<1000) stop("Fewer than 1000 sites have data above the minimum coverage, try inclreasing smoothing")    

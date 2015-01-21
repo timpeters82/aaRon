@@ -13,6 +13,7 @@
 #'
 #' @author Aaron Statham <a.statham@@garvan.org.au>
 methRatios <- function(x, samples, minCov=5) {
+    stopifnot(all(c("Sample", "C", "cov") %in% colnames(samples)))
 	tmp <- as.matrix(values(x)[samples$cov])
 	tmp[tmp<minCov] <- NA
 	values(x) <- as.matrix(values(x)[samples$C])/tmp

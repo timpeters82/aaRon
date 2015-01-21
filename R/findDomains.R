@@ -19,6 +19,7 @@
 #'
 #' @author Aaron Statham <a.statham@@garvan.org.au>
 findDomains <- function(x, samples, minSize=5000, wsize=1000, step=100, cutoff=0.15, minCov=5) {
+    stopifnot(all(c("Sample", "C", "cov") %in% colnames(samples)))
     if (!"w" %in% names(values(x))) {
         message("Weights missing from 'x', calculating...")
         x$w <- cpgWeights(x)

@@ -21,6 +21,7 @@
 #' @author Aaron Statham <a.statham@@garvan.org.au>
 biasPlots <- function(x, samples, build) {
     y <- Sample <- NULL #to shut up R CMD check
+    stopifnot(all(c("Sample", "C", "cov") %in% colnames(samples)))
     # minimum number of data points to have the median calculated
     minBlocks <- 100
 

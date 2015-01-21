@@ -15,6 +15,7 @@
 #'
 #' @author Aaron Statham <a.statham@@garvan.org.au>
 slidingMethRatios <- function(x, samples, n=5, minCov=5) {
+    stopifnot(all(c("Sample", "C", "cov") %in% colnames(samples)))
     x <- methRatios(x, samples, minCov)
     x.split <- GenomicRanges::split(x, seqnames(x))
     x.result <- unlist(GRangesList(mclapply(names(x.split), function(i) {
