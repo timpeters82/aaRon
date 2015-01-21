@@ -6,11 +6,11 @@
 #' @param plot Whether to plot after calculating the intersections
 #' @param basepair Whether to calculate the intersections on a per-basepair level rather than per region
 #' @param ... Additional parameters passed on to vennDiagram
-#' @return A list containing the pooled and reduced ranges, a boolean matrix of whether each sample in \code{x} overlaps each \code{Ranges} and the vennCounts
+#' @return A list containing the pooled and reduced ranges, these ranges split into each venn partition, a boolean matrix of whether each sample in \code{x} overlaps each \code{Ranges} and the vennCounts
 #'
 #' @export
 #'
-#' @importFrom GenomicRanges reduce unlist
+#' @importFrom GenomicRanges reduce unlist split
 #' @importFrom limma vennCounts vennDiagram
 #'
 #' @author Aaron Statham <a.statham@@garvan.org.au>
@@ -41,16 +41,20 @@ grangesVenn <- function(x, plot=TRUE, basepair=FALSE, ...) {
 		            tmp <- intersect(tmp, x[[j]]) else tmp <- setdiff(tmp, x[[j]])
 		    tmp
 		}))
+		names(x.outcomes) <- apply(outcomes==1, 1, function(i)
+			paste(colnames(outcomes)[which(i)], collapse="+"))
 
 		x.counts <- structure(cbind(outcomes,
 			Counts=paste0(prettyNum(round(sum(width(x.outcomes))/1e6,1), big.mark=","), "Mb")),
 			class = "VennCounts")
 		if (plot) vennDiagram(x.counts, ...)
-		invisible(list("Ranges"=x.pool, "Counts"=x.counts))
+		invisible(list("Ranges"=x.pool, "SplitRanges"=x.outcomes[!names(x.outcomes)==""], "Counts"=x.counts))
 	} else {
 		x.ov <- sapply(x, function(y) x.pool %over% y)
 		x.counts <- vennCounts(x.ov)
 		if (plot) vennDiagram(x.ov[,1:min(5, ncol(x.ov))], ...)
-		invisible(list("Ranges"=x.pool, "Overlaps"=x.ov, "Counts"=x.counts))
+		x.outcomes = split(x.pool, apply(x.ov, 1, function(i)
+			paste(colnames(x$Counts)[which(i)], collapse="+")))
+		invisible(list("Ranges"=x.pool, "SplitRanges"=x.outcomes, "Overlaps"=x.ov, "Counts"=x.counts))
 	}
 }

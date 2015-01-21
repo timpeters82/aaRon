@@ -19,9 +19,10 @@ grangesVenn(x, plot = TRUE, basepair = FALSE, ...)
   vennDiagram}
 }
 \value{
-A list containing the pooled and reduced ranges, a boolean
-matrix of whether each sample in \code{x} overlaps each
-\code{Ranges} and the vennCounts
+A list containing the pooled and reduced ranges, these
+ranges split into each venn partition, a boolean matrix of
+whether each sample in \code{x} overlaps each \code{Ranges}
+and the vennCounts
 }
 \description{
 Creates a table of overlapping \code{GRanges} from a
