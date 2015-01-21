@@ -54,7 +54,7 @@ grangesVenn <- function(x, plot=TRUE, basepair=FALSE, ...) {
 		x.counts <- vennCounts(x.ov)
 		if (plot) vennDiagram(x.ov[,1:min(5, ncol(x.ov))], ...)
 		x.outcomes = split(x.pool, apply(x.ov, 1, function(i)
-			paste(colnames(x$Counts)[which(i)], collapse="+")))
+			paste(colnames(x.counts)[which(i)], collapse="+")))
 		invisible(list("Ranges"=x.pool, "SplitRanges"=x.outcomes, "Overlaps"=x.ov, "Counts"=x.counts))
 	}
 }
