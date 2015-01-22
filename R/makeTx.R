@@ -34,7 +34,7 @@ makeTx <- function(file, genome, type_attrib=c("transcript_biotype", "source")) 
     attribs <- c("gene_name"="gene_name", "gene_type"="gene_biotype", "gene_id"="gene_id", "tx_id"="transcript_id")
     if (type_attrib=="transcript_biotype") {
         if (!any(grepl(type_attrib, gtf$V9[1:1000]))) stop("'transcript_biotype' attribute not found in supplied GTF file!")
-        attribs <- c(attribs, "transcript_biotype"="transcript_biotype")
+        attribs <- c(attribs, "tx_type"="transcript_biotype")
     }
     gtf.attribs <- data.frame(lapply(attribs, function(a) gsub('.*"', '', gsub('";', '', str_extract(gtf$V9, paste0(a, ".+?;"))))), stringsAsFactors=FALSE) 
     if (type_attrib=="source") gtf.attribs$tx_type <- gtf$V2

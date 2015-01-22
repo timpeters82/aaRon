@@ -39,6 +39,11 @@
 annotateRegions <- function(reg, tx, CpGislands) {
     if (!all(c("gene_name", "gene_id", "tx_id", "tx_type") %in% names(values(tx)))) stop("Supplied tx does not contain all required columns, was it created by makeTx?")
 
+    if (length(reg)==0) {
+        warning("Supplied 'reg' is of length zero!")
+        return(reg)
+    }
+
     all.levels <- unique(c(seqlevels(reg), seqlevels(tx), seqlevels(CpGislands)))
     seqlevels(reg) <- seqlevels(tx) <- seqlevels(CpGislands) <- all.levels
 
