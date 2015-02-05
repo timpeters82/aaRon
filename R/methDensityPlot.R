@@ -5,7 +5,7 @@
 #' @param x A \code{GRanges}, \code{matrix} or \code{data.frame} of methylation ratios
 #' @param samples \code{data.frame} describing the samples to plot
 #' @param title Title for the plot
-#' @param cols Named vector of colours to use 
+#' @param cols Named vector of colours to use for each group
 #' @return Called for the side effect of plotting
 #'
 #' @export

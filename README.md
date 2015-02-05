@@ -11,10 +11,13 @@ To get the current development version from github:
 devtools::install_github("astatham/aaRon")
 ```
 
+# Vignettes
+* [Guide to analysis of NOMe-seq data](http://astatham.github.io/aaRon/NOMe.html)
+
 # TODOs
 
 * Create S4 classes for methylation count and ratio tables
 * Add working examples to each function
-* Create a vignette of example use cases
+* Create additional vignettes of example use cases
 
 

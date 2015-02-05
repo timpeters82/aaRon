@@ -15,7 +15,8 @@ methDensityPlot(x, samples, title, cols = NULL)
 
   \item{title}{Title for the plot}
 
-  \item{cols}{Named vector of colours to use}
+  \item{cols}{Named vector of colours to use for each
+  group}
 }
 \value{
 Called for the side effect of plotting

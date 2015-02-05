@@ -5,7 +5,7 @@
 \title{methMDS}
 \usage{
 methMDS(x, samples, smoothing = 1, top = c(1, 10, 100), minCov = 5,
-  mc.cores = 1)
+  mc.cores = 1, cols = NULL)
 }
 \arguments{
   \item{x}{\code{GRanges} of methylation count data}
@@ -24,6 +24,9 @@ methMDS(x, samples, smoothing = 1, top = c(1, 10, 100), minCov = 5,
   ratio}
 
   \item{mc.cores}{Number of cores to use}
+
+  \item{cols}{Named vector of colours to use for each
+  group}
 }
 \value{
 Called for the side effect of plotting
