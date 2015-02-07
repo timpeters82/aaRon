@@ -83,7 +83,8 @@ methMDS <- function(x, samples, smoothing=1, top=c(1, 10, 100), minCov=5, mc.cor
         tmp <- tmp[tmp %over% x]
         ratios <- as.matrix(values(methWindowRatios(x, tmp, samples, minCov, mc.cores)))
     }
-    ratios <- ratios[rowMeans(is.na(ratios))<1, , drop=FALSE]
+    # Remove rows with 90% NAs
+    ratios <- ratios[rowMeans(is.na(ratios))<0.9, , drop=FALSE]
     if (nrow(ratios)<1000) stop("Fewer than 1000 sites have data above the minimum coverage, try inclreasing smoothing")    
     for (i in top) {
         npos <- trunc(nrow(ratios)*i/100)

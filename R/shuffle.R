@@ -13,6 +13,7 @@
 #'
 #' @author Aaron Statham <a.statham@@garvan.org.au>
 shuffle <- function(x) {
+    stopifnot(class(x)=="GRanges")
     if (any(is.na(seqlengths(x)))) stop("seqlengths of x must be defined")
     x <- unvalue(x)
     available <- GRanges(seqlevels(x), IRanges(1, seqlengths(x)), seqlengths=seqlengths(x))
@@ -45,6 +46,7 @@ projectOnto <- function(pos, avail) {
 #'
 #' @author Aaron Statham <a.statham@@garvan.org.au>
 shuffleBed <- function(x) {
+    stopifnot(class(x)=="GRanges")
     if (nchar(Sys.which("shuffleBed"))==0) stop("shuffleBed must be in the PATH")
     if (any(is.na(seqlengths(x)))) stop("seqlengths of x must be defined")
     genome_file <- tempfile()
