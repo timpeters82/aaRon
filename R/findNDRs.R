@@ -10,10 +10,10 @@
 #' @param minSize Minimum size of an NDR when overlapping significant windows are pooled
 #' @return \code{GRangesList} of NDRs found in each sample with the mean pvalue for each region
 #' 
-#' importFrom compiler cmpfun
-#' importFrom Repitools genomeBlocks
-#' importFrom GenomeInfoDb seqlengths
-#' importFrom GenomicRanges findOverlaps GRangesList values reduce width
+#' @importFrom compiler cmpfun
+#' @importFrom Repitools genomeBlocks
+#' @importFrom GenomeInfoDb seqlengths
+#' @importFrom GenomicRanges findOverlaps GRangesList values reduce width
 #'
 #' @export
 #'

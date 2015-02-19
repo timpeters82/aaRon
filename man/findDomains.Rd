@@ -31,10 +31,6 @@ findDomains(x, samples, minSize = 5000, wsize = 1000, step = 100,
 }
 \value{
 \code{GRangesList} of domains found in each sample
-
-importFrom GenomicRanges values values<- seqlengths
-seqnames GRangesList reduce width split importFrom
-Repitools genomeBlocks importFrom parallel multicore
 }
 \description{
 Find DNA methylation domains using the procedure described
