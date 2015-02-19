@@ -21,3 +21,4 @@ devtools::install_github("astatham/aaRon")
 * Create additional vignettes of example use cases
 
 
+[![Build Status](https://travis-ci.org/astatham/aaRon.png?branch=master)](https://travis-ci.org/astatham/aaRon)
