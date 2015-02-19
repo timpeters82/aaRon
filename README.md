@@ -12,6 +12,7 @@ devtools::install_github("astatham/aaRon")
 ```
 
 # Vignettes
+
 * [Guide to analysis of NOMe-seq data](http://astatham.github.io/aaRon/NOMe.html)
 
 # TODOs
@@ -20,5 +21,6 @@ devtools::install_github("astatham/aaRon")
 * Add working examples to each function
 * Create additional vignettes of example use cases
 
+# travis-ci
 
 [![Build Status](https://travis-ci.org/astatham/aaRon.png?branch=master)](https://travis-ci.org/astatham/aaRon)
