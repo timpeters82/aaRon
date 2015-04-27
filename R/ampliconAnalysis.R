@@ -1,6 +1,6 @@
 #' ampliconGRanges
 #' 
-#' Align a \code{data.frame} describing amplicons against a supplied genome, returning an annotated amplicon \code{GRanges}
+#' Align a \code{data.frame} describing amplicons against a supplied genome, returning an annotated amplicon \code{GRanges} for use in \code{ampliconAnalysis}
 #'
 #' @param x \code{data.frame} of amplicons containing the columns "Amplicon", "Target", "FW", "RV", "Sequenom"
 #' @param genome \code{BSgenome} to map the amplicons to
@@ -17,6 +17,11 @@
 #' @author Aaron Statham <a.statham@@garvan.org.au>
 ampliconGRanges <- function(x, genome, mc.cores=1) {
     stopifnot(all(c("Amplicon", "Target", "FW", "RV", "Sequenom") %in% names(x)))
+    # Make sure Target, FW and RV are character
+    x$Target <- as.character(x$Target)
+    x$FW <- as.character(x$FW)
+    x$RV <- as.character(x$RV)
+    # Get length of base primers (ie no sequenom tags)
 	x$FW_len <- ifelse(x$Sequenom, nchar(x$FW)-10, nchar(x$FW))
 	x$RV_len <- ifelse(x$Sequenom, nchar(x$RV)-31, nchar(x$RV))
 
@@ -52,7 +57,7 @@ ampliconGRanges <- function(x, genome, mc.cores=1) {
 #'
 #' Start to finish analysis of MiSeq bisulfite amplicon sequencing data
 #'
-#' @param amplicon_file Filename of the \code{csv} to read in amplicon data from
+#' @param amplicons \code{GRanges} of amplicons created by \code{ampliconGRanges}
 #' @param bams A named \code{character} vector of bams to be analysed for the supplied amplicons
 #' @param genome \code{BSgenome} to map the amplicons to
 #' @param paired \code{boolean} of whether to only load properly paired reads from the bams
@@ -73,18 +78,14 @@ ampliconGRanges <- function(x, genome, mc.cores=1) {
 #' @importFrom Rsamtools ScanBamParam scanBamFlag
 #'
 #' @author Aaron Statham <a.statham@@garvan.org.au>
-ampliconAnalysis <- function(amplicon_file, bams, genome, paired=TRUE, minCov=50, min.map.q=40, mc.cores=1) {
+ampliconAnalysis <- function(amplicons, bams, genome, paired=TRUE, minCov=50, min.map.q=40, mc.cores=1) {
     # Quick checks
-    stopifnot(file.exists(amplicon_file))
+    stopifnot(inherits(amplicons, "GRanges"))
+    stopifnot(all(c("Amplicon", "Target", "FW", "RV", "Sequenom", "FW_len", "RV_len", "size", "internal",
+        "CGs", "primers") %in% names(values(amplicons))))
     stopifnot(all(file.exists(bams)))
     stopifnot(length(names(bams))==length(bams))
     
-    # Read in, validate and align amplicon file
-    amplicons <- read.csv(amplicon_file, stringsAsFactors=FALSE)
-    stopifnot(all(c("Amplicon", "Target", "FW", "RV", "Sequenom") %in% names(amplicons)))
-    message("Mapping amplicons to the supplied genome")
-    amplicons <- ampliconGRanges(amplicons, genome, mc.cores)
-
     # Handy for s/lapplying
     amps <- 1:length(amplicons)
     names(amps) <- amplicons$Amplicon

@@ -20,7 +20,7 @@ ampliconGRanges(x, genome, mc.cores = 1)
 \description{
 Align a \code{data.frame} describing amplicons against a
 supplied genome, returning an annotated amplicon
-\code{GRanges}
+\code{GRanges} for use in \code{ampliconAnalysis}
 }
 \author{
 Aaron Statham <a.statham@garvan.org.au>

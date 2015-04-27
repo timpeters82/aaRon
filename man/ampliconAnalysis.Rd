@@ -4,12 +4,12 @@
 \alias{ampliconAnalysis}
 \title{ampliconAnalysis}
 \usage{
-ampliconAnalysis(amplicon_file, bams, genome, paired = TRUE, minCov = 50,
+ampliconAnalysis(amplicons, bams, genome, paired = TRUE, minCov = 50,
   min.map.q = 40, mc.cores = 1)
 }
 \arguments{
-  \item{amplicon_file}{Filename of the \code{csv} to read
-  in amplicon data from}
+  \item{amplicons}{\code{GRanges} of amplicons created by
+  \code{ampliconGRanges}}
 
   \item{bams}{A named \code{character} vector of bams to be
   analysed for the supplied amplicons}
