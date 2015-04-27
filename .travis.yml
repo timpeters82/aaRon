@@ -2,6 +2,8 @@
 
 language: c
 
+sudo: required
+
 env:
   global:
     - BIOC_USE_DEVEL="FALSE"
