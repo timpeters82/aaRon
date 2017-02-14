@@ -35,7 +35,7 @@
 #' @importFrom GenomicRanges findOverlaps distanceToNearest resize setdiff flank
 #' @importFrom IRanges IRanges
 #'
-#' @author Aaron Statham <a.statham@@garvan.org.au>
+#' @author Aaron Statham <a.statham@@garvan.org.au>, Tim Peters <t.peters@garvan.org.au>
 annotateRegions <- function(reg, tx, CpGislands) {
     if (!all(c("gene_name", "gene_id", "tx_id", "tx_type") %in% names(values(tx)))) stop("Supplied tx does not contain all required columns, was it created by makeTx?")
 
@@ -65,8 +65,10 @@ annotateRegions <- function(reg, tx, CpGislands) {
 
     # Distance to closest TSS
     reg.dist <- as.data.frame(distanceToNearest(reg, resize(tx, 1, fix="start")))
-    reg$distanceTSS <- reg.dist$distance
-    reg$TSS <- reg.dist$subjectHits
+    reg$distanceTSS <- NA
+    reg$distanceTSS[reg.dist$queryHits] <- reg.dist$distance
+    reg$TSS <- NA
+    reg$TSS[reg.dist$queryHits] <- reg.dist$subjectHits
     reg$tx_id <- tx$tx_id[reg$TSS]
     reg$tx_type <- tx$tx_type[reg$TSS]
     reg$gene_id <- tx$gene_id[reg$TSS]
@@ -74,16 +76,20 @@ annotateRegions <- function(reg, tx, CpGislands) {
 
     # Distance to closest protein-coding TSS
     reg.dist <- as.data.frame(distanceToNearest(reg, resize(tx2, 1, fix="start")))
-    reg$distanceTSS_prot <- reg.dist$distance
-    reg$TSS_prot <- reg.dist$subjectHits
+    reg$distanceTSS_prot <- NA
+    reg$distanceTSS_prot[reg.dist$queryHits] <- reg.dist$distance
+    reg$TSS_prot <- NA
+    reg$TSS_prot[reg.dist$queryHits] <- reg.dist$subjectHits
     reg$tx_id_prot <- tx2$tx_id[reg$TSS_prot]
     reg$gene_id_prot <- tx2$gene_id[reg$TSS_prot]
     reg$gene_name_prot <- tx2$gene_name[reg$TSS_prot]
 
     # Distance to closest CpG island
     reg.dist <- as.data.frame(distanceToNearest(reg, CpGislands))
-    reg$distanceCpGi <- reg.dist$distance
-    reg$CpGi <- reg.dist$subjectHits
+    reg$distanceCpGi <- NA
+    reg$distanceCpGi[reg.dist$queryHits] <- reg.dist$distance
+    reg$CpGi <- NA
+    reg$CpGi[reg.dist$queryHits] <- reg.dist$subjectHits
 
     # % promoter/genebody/intergenic (2kb up and down)
     promotersGR <- suppressWarnings(reduce(strip(resize(resize(tx, 1, fix="start"), 4000, fix="center"))))
@@ -113,4 +119,5 @@ annotateRegions <- function(reg, tx, CpGislands) {
 
     reg
 }
+
 
