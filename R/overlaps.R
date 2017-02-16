@@ -101,7 +101,7 @@ coverageRatio <- function(query, subject, ratio=TRUE) {
         warning("Supplied 'subject' contains strand information - this is ignored by coverageRatio")
         strand(subject) <- "*"
     }
-    if (nrow(as.matrix(findOverlaps(subject, ignoreSelf=TRUE, ignoreRedundant=TRUE)))>0) {
+    if (nrow(as.matrix(findOverlaps(subject, drop.self=TRUE, drop.redundant=TRUE)))>0) {
         warning("Supplied 'subject' contains overlapping ranges, reducing...")
         subject <- reduce(subject)
     }
