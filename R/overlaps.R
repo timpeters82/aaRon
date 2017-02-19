@@ -101,10 +101,7 @@ coverageRatio <- function(query, subject, ratio=TRUE) {
         warning("Supplied 'subject' contains strand information - this is ignored by coverageRatio")
         strand(subject) <- "*"
     }
-    if (nrow(as.matrix(findOverlaps(subject, drop.self=TRUE, drop.redundant=TRUE)))>0) {
-        warning("Supplied 'subject' contains overlapping ranges, reducing...")
-        subject <- reduce(subject)
-    }
+    subject <- reduce(subject)
     # Fucking Views use Fucking RangesLists which do not fucking preserve order
     oo <- GenomicRanges::order(query)
     chr.oo <- unique(as.character(seqnames(query[oo])))
