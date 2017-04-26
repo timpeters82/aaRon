@@ -19,7 +19,7 @@
 #' 
 #' @importFrom Repitools featureScores tables
 #' @importFrom GenomicRanges unlist
-#' @importFrom IRanges elementLengths
+#' @importFrom IRanges elementNROWS
 #'
 #' @author Aaron Statham <a.statham@@garvan.org.au>
 seqHeatmaps <- function(bamfiles, anno, up=2000, down=2000, freq=20, s.width=200, nc=length(anno), nr=length(bamfiles), cols=colorRampPalette(c("white", "red"))(100), zlim=c(0, 1), n.sample=2000) {
@@ -31,18 +31,18 @@ seqHeatmaps <- function(bamfiles, anno, up=2000, down=2000, freq=20, s.width=200
 	stopifnot(length(names(anno))==length(anno))
 	stopifnot(nc<=length(anno))
 	stopifnot(nr<=length(bamfiles))
-	stopifnot(all(elementLengths(anno)>=n.sample) | is.null(n.sample))
+	stopifnot(all(elementNROWS(anno)>=n.sample) | is.null(n.sample))
 
 	# Get scores for all annos, scale up to rpm
 	b.scores <- lapply(tables(featureScores(bamfiles, unlist(anno), up=up, down=down, freq=freq, s.width=s.width)), function(x) x*1e6)
 	pos <- as.integer(colnames(b.scores[[1]]))
 	
 	# split per anno
-	b.scores <- lapply(b.scores, function(x) lapply(split(as.data.frame(x), rep(names(anno), elementLengths(anno))), as.matrix))
+	b.scores <- lapply(b.scores, function(x) lapply(split(as.data.frame(x), rep(names(anno), elementNROWS(anno))), as.matrix))
 
 	# sample (if enabled)
 	if (is.null(n.sample)) b.sample <- b.scores else {
-		b.sample <- lapply(elementLengths(anno), sample, n.sample)
+		b.sample <- lapply(elementNROWS(anno), sample, n.sample)
 		b.sample <- lapply(b.scores, function(x) lapply(1:length(anno), function(y) x[[y]][b.sample[[y]],]))
 	}
 

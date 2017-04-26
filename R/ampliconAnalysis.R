@@ -11,7 +11,7 @@
 #' 
 #' @importFrom parallel mclapply
 #' @importFrom Biostrings vmatchPattern
-#' @importFrom IRanges elementLengths
+#' @importFrom IRanges elementNROWS
 #' @importFrom GenomicRanges unlist GRangesList values width start resize
 #'
 #' @author Aaron Statham <a.statham@@garvan.org.au>
@@ -27,10 +27,10 @@ ampliconGRanges <- function(x, genome, mc.cores=1) {
 
 	#
 	xHits <- mclapply(x$Target, vmatchPattern, genome, mc.cores=mc.cores)
-	stopifnot(all(elementLengths(xHits)==1))
+	stopifnot(all(elementNROWS(xHits)==1))
 	#Keep x with a single hit (for now)
-	x <- x[elementLengths(xHits)==1,]
-	xHits <- xHits[elementLengths(xHits)==1]
+	x <- x[elementNROWS(xHits)==1,]
+	xHits <- xHits[elementNROWS(xHits)==1]
 	xHits <- unlist(GRangesList(xHits))
 	values(xHits) <- x
 	x <- xHits
@@ -70,7 +70,7 @@ ampliconGRanges <- function(x, genome, mc.cores=1) {
 #'
 #' @importFrom GenomicRanges GRangesList GRanges seqnames start end strand values countOverlaps resize subsetByOverlaps
 #' @importFrom GenomeInfoDb seqlevels
-#' @importFrom IRanges IRanges endoapply elementLengths %over% cbind as.data.frame
+#' @importFrom IRanges IRanges endoapply elementNROWS %over% cbind as.data.frame
 #' @importFrom S4Vectors DataFrame
 #' @importFrom Biostrings getSeq complement letterFrequency
 #' @importFrom parallel mclapply
@@ -111,7 +111,7 @@ ampliconAnalysis <- function(amplicons, bams, genome, paired=TRUE, minCov=50, mi
     seqlevels(amplicons, force=TRUE) <- seqlevels(amplicon.bases, force=TRUE) <- seqlevels(libs[[1]]) # for pileup
     
     # Summary of how many reads hit amplicons
-    amplicon_summary <- data.frame("No_Reads"=elementLengths(libs),
+    amplicon_summary <- data.frame("No_Reads"=elementNROWS(libs),
                             "On_Target_Reads"=sapply(libs, function(x) sum(unstrand(x) %over% amplicons)))
     amplicon_summary$On_Target_Percentage <- amplicon_summary$On_Target_Reads/amplicon_summary$No_Reads*100
     amplicon_counts <- sapply(libs, function(x) countOverlaps(amplicons, unstrand(x)))

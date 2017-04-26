@@ -138,7 +138,7 @@ coverageRatio <- function(query, subject, ratio=TRUE) {
 #'
 #' @importFrom parallel mclapply
 #' @importFrom GenomicRanges width
-#' @importFrom IRanges %over% elementLengths
+#' @importFrom IRanges %over% elementNROWS
 #'
 #' @author Aaron Statham <a.statham@@garvan.org.au>
 overlapStats <- function(ROI, TFs, TF.gx, gx, accessible=2.5e9) {
@@ -146,7 +146,7 @@ overlapStats <- function(ROI, TFs, TF.gx, gx, accessible=2.5e9) {
     ROI.ov <- simplify2array(mclapply(TFs, function(x) ROI %over% x))
     ROI.cov <- simplify2array(mclapply(TFs, function(x) sum(coverageRatio(ROI, x, FALSE))))
     ROI.stats <- data.frame("TF"=names(TFs), 
-                          "TF.n"=elementLengths(TFs), 
+                          "TF.n"=elementNROWS(TFs), 
                           "Hits"=colSums(ROI.ov), 
                   "Hits.percent"=colMeans(ROI.ov)*100, 
                 stringsAsFactors=FALSE)

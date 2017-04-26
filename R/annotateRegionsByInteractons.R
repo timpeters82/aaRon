@@ -56,7 +56,7 @@ annotateRegionsByInteractions <- function(reg, tx, interactions, distance=2000) 
     # Extracts lists of subsets of IntegerLists, unlists and uniques each subset individuall
     # Could do with another rewrite for speed - full unlist then split per calculated subsets range then unique to avoid an unlist per subset
     extractUnique <- function(x, indList) {
-        tmp <- data.frame("i"=rep(names(indList), elementLengths(indList)), "inds"=unname(unlist(indList)))
+        tmp <- data.frame("i"=rep(names(indList), elementNROWS(indList)), "inds"=unname(unlist(indList)))
         lapply(split(x[tmp$inds], tmp$i), function(i) unique(unlist(i)))[names(indList)]
     }
 
@@ -83,13 +83,13 @@ annotateRegionsByInteractions <- function(reg, tx, interactions, distance=2000) 
 
     # Distance to distal TSSs
     message(" * Calculating distance between regions and paired TSSs")
-    reg$pair.TSS.dists <- relist(distance(rep(reg, elementLengths(reg$pair.TSSs)), TSS.1[unlist(reg$pair.TSSs)]), reg$pair.TSSs)
+    reg$pair.TSS.dists <- relist(distance(rep(reg, elementNROWS(reg$pair.TSSs)), TSS.1[unlist(reg$pair.TSSs)]), reg$pair.TSSs)
 
     # Try to summarize peak
     message("Summarising overlaps")
-    reg$Summary <- ifelse(elementLengths(reg$TSSs)>0, "TSS", 
-                        ifelse(elementLengths(reg$pair.TSSs)>0, "TSS_Interaction",
-                            ifelse(elementLengths(reg$pairs)>0, "Non_TSS_Interaction", "Non_Interacting")))
+    reg$Summary <- ifelse(elementNROWS(reg$TSSs)>0, "TSS", 
+                        ifelse(elementNROWS(reg$pair.TSSs)>0, "TSS_Interaction",
+                            ifelse(elementNROWS(reg$pairs)>0, "Non_TSS_Interaction", "Non_Interacting")))
 
     reg
 }

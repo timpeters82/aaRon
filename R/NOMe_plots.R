@@ -31,7 +31,7 @@ methylationPlotRegions <- function(meth, regions, samples, GpC, main="", up=1000
         regions <- GRangesList(list("regions"=regions))
         cols <- 1
     }
-    if (addN) names(regions) <- paste0(names(regions), " n=", prettyNum(elementLengths(regions), big.mark=","))
+    if (addN) names(regions) <- paste0(names(regions), " n=", prettyNum(elementNROWS(regions), big.mark=","))
     meth <- meth[values(meth)[[samples$cov]]>=minCov]
 
     meth.regions <- lapply(regions, function(x) {
